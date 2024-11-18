@@ -1,20 +1,19 @@
-import * as seed from "@/lib/seed";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { seedDatabase } from '../../../lib/seed';
 
-/**
- * Exposes an API endpoint `GET /api/seed`. When hit, runs the commands against the database to create tables and load data.
- */
-export async function GET() {
-  try {
-    await seed.begin();
-    await seed.seedTitles();
-    await seed.seedFavorites();
-    await seed.seedWatchLater();
-    await seed.seedActivity();
-    await seed.commit();
-
-    return Response.json({ message: "Database seeded successfully" });
-  } catch (error) {
-    await seed.rollback();
-    return Response.json({ error }, { status: 500 });
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === 'GET') {
+    try {
+      await seedDatabase();
+      res.status(200).json({ message: 'Database seeded successfully' });
+    } catch (error) {
+      console.error('Error seeding database:', error);
+      res.status(500).json({ error: 'Failed to seed database' });
+    }
+  } else {
+    res.status(405).json({ error: 'Method not allowed' });
   }
 }
