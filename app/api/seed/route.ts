@@ -14,6 +14,7 @@ export default async function handler(
       res.status(500).json({ error: 'Failed to seed database' });
     }
   } else {
+    res.setHeader('Allow', ['GET']);
     res.status(405).json({ error: 'Method not allowed' });
   }
 }
