@@ -20,9 +20,10 @@ model User {
 }
 
 model DietType {
-  dietId      Int               @id @default(autoincrement())
-  dietName    String            @unique
+  dietId      Int       @id @default(autoincrement())
+  dietName    String    @unique
   preferences UserPreference[]
+  recipes     Recipe[]
 }
 
 model UserPreference {
@@ -55,9 +56,11 @@ model Recipe {
   ingredients  Json
   instructions String
   prepTime     Int?
+  dietId       Int
   timestamp    DateTime  @default(now())
 
   user     User      @relation(fields: [uid], references: [uid])
+  dietType DietType  @relation(fields: [dietId], references: [dietId], onDelete: Cascade)
   contexts Context[]
 }
 
