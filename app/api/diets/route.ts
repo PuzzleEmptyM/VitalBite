@@ -20,22 +20,22 @@ async function runSQL(query: string, params: any[] = []) {
 // Define the API route
 export const GET = async () => {
   try {
-    console.log("Fetching diets...");
+    console.log("Fetching diet names...");
 
-    // SQL qu ery to fetch all diet types
-    const result = await runSQL("SELECT * FROM diet_types");
+    // SQL query to fetch only the DietName column
+    const result = await runSQL('SELECT "dietName" FROM "DietType"');
 
     // Check if any results were returned
     if (result.rows.length === 0) {
-      return NextResponse.json({ message: "No diets found" }, { status: 404 });
+      return NextResponse.json({ message: "No diet names found" }, { status: 404 });
     }
 
-    // Return the fetched diet types as a JSON response
+    // Return the fetched diet names as a JSON response
     return NextResponse.json(result.rows);
   } catch (error) {
-    console.error("Error fetching diets:", error);
+    console.error("Error fetching diet names:", error);
     return NextResponse.json(
-      { error: "Failed to fetch diets" },
+      { error: "Failed to fetch diet names" },
       { status: 500 }
     );
   }
