@@ -18,6 +18,7 @@ async function runSQL(query: string) {
 // Seed the database
 export async function seedDatabase() {
   await runSQL(`
+    -- Create independent tables first
     CREATE TABLE IF NOT EXISTS users (
       uid SERIAL PRIMARY KEY,
       email TEXT NOT NULL UNIQUE,
@@ -27,19 +28,12 @@ export async function seedDatabase() {
       dietId SERIAL PRIMARY KEY,
       dietName TEXT NOT NULL UNIQUE
     );
+  
+    -- Create tables with foreign key dependencies
     CREATE TABLE IF NOT EXISTS user_preferences (
       preferenceId SERIAL PRIMARY KEY,
       uid INT NOT NULL REFERENCES users(uid),
       dietId INT NOT NULL REFERENCES diet_types(dietId)
-    );
-    CREATE TABLE IF NOT EXISTS user_context (
-      chatId SERIAL PRIMARY KEY,
-      uid INT NOT NULL REFERENCES users(uid),
-      userQuestion TEXT NOT NULL,
-      chatResponse TEXT NOT NULL,
-      recipeId INT REFERENCES recipes(recipeId) ON DELETE SET NULL,
-      tipId INT REFERENCES tips(tipId) ON DELETE SET NULL,
-      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     CREATE TABLE IF NOT EXISTS recipes (
       recipeId SERIAL PRIMARY KEY,
@@ -54,6 +48,15 @@ export async function seedDatabase() {
       tipId SERIAL PRIMARY KEY,
       uid INT NOT NULL REFERENCES users(uid),
       tip TEXT NOT NULL,
+      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS user_context (
+      chatId SERIAL PRIMARY KEY,
+      uid INT NOT NULL REFERENCES users(uid),
+      userQuestion TEXT NOT NULL,
+      chatResponse TEXT NOT NULL,
+      recipeId INT REFERENCES recipes(recipeId) ON DELETE SET NULL,
+      tipId INT REFERENCES tips(tipId) ON DELETE SET NULL,
       timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `);
