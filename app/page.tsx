@@ -1,7 +1,105 @@
-export default async function Page() {
+import React from "react";
+
+const Page = () => {
   return (
-    <div className="flex items-center justify-center h-screen">
-      Hello Cinema Guru
+    <div className="bg-white min-h-screen p-4 font-sans">
+      {/* Header */}
+      <header className="flex items-center justify-between mb-6">
+        <img src="/images/vb_logo.png" alt="VB Logo" className="w-20 h-20" />
+        <div className="w-10 h-10 bg-mint text-forest_green font-bold font-playfair rounded-full flex items-center justify-center border-2 border-forest_green shadow-sm">
+          TW
+        </div>
+      </header>
+
+      {/* Welcome Section */}
+      <section className="text-center mb-6">
+        <img src="/images/vitalbite.png" alt="VitalBite Logo" className="mx-auto mb-2" />
+        <h2 className="text-4xl font-bold font-hellowin text-teal">Welcome, Tiffany</h2>
+        <div className="mt-4 text-left font-playfair flex items-center justify-between">
+          <div className="w-full text-left ml-4">
+            <h3 className="text-xl font-semibold text-forest_green">What is celiac disease?</h3>
+            <p className="text-sm text-forest_green mt-2">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Etiam vitae elit urna. Nam
+              maximus accumsan ligula et ultrices.
+            </p>
+            <button className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md">
+              Learn More
+            </button>
+          </div>
+
+          <div className="w-1/3 pr-0 pl-6">
+            <img src="/images/health.png" alt="Medical Condition" className="w-full h-auto max-w-none mb-2" />
+          </div>
+        </div>
+
+      </section>
+
+      {/* Features Section */}
+      <section className="grid grid-cols-2 gap-4">
+        {/* First Card */}
+        <div className="bg-mint rounded-lg p-4 flex flex-col items-center border-2 border-forest_green mt-8 shadow-lg">
+          <img src="/images/avocado.png" alt="Do's and Don'ts" className="w-25 h-25 mb-2" />
+          <h4 className="text-forest_green font-playfair font-semibold border-b-2 border-forest_green mb-2">Do's and Don'ts</h4>
+        </div>
+
+        {/* Second Card */}
+        <div className="bg-mint rounded-lg p-4 flex flex-col items-center border-2 border-forest_green mt-8 shadow-lg">
+          <img src="/images/heart.png" alt="Healthy Tips" className="w-25 h-25 mb-2" />
+          <h4 className="text-forest_green font-playfair font-semibold border-b-2 border-forest_green mb-2">Healthy Tips</h4>
+        </div>
+
+        {/* Third Card */}
+        <div className="bg-mint rounded-lg p-4 flex flex-col items-center col-span-2 border-2 border-forest_green mt-8 shadow-lg">
+          <img src="/images/spoon.png" alt="Ingredient Analyzer" className="w-25 h-25 mb-2" />
+          <h4 className="text-forest_green font-playfair font-semibold border-b-2 border-forest_green mb-2">Ingredient Analyzer</h4>
+        </div>
+      </section>
+
+
+
+      {/* AI Chatbot Section */}
+      <section className="mt-6 bg-white p-4 rounded-lg font-playfair flex items-center">
+        <div className="w-1/3 pr-6 pl-0">
+          <img
+            src="/images/tomato.png"
+            alt="AI Chatbot"
+            className="w-auto h-auto max-w-none mb-2 ml-[-50]"
+          />
+        </div>
+
+        <div className="w-full text-left ml-8">
+          <h3 className="text-lg font-semibold text-forest_green">AI Chatbot</h3>
+          <p className="text-sm text-forest_green mt-2">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id odio maximus.
+          </p>
+          <button className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md">
+            Try Now
+          </button>
+        </div>
+      </section>
+
+
+
+      <div className="mb-12"></div>
+
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-cream flex justify-around py-2 shadow-md border-2 border-forest_green">
+        <button>
+          <img src="/icons/chat.svg" alt="Home" className="w-8 h-8" />
+        </button>
+        <button>
+          <img src="/icons/user.svg" alt="Profile" className="w-8 h-8" />
+        </button>
+        <button>
+          <img src="/icons/home.svg" alt="Settings" className="w-8 h-8" />
+        </button>
+        <button>
+          <img src="/icons/carrot.svg" alt="Carrot" className="w-8 h-8 " />
+        </button>
+      </nav>
     </div>
   );
-}
+};
+
+export default Page;
