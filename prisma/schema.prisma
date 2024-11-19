@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model User {
+  uid         Int         @id @default(autoincrement())
+  email       String      @unique
+  password    String?     // Nullable to accommodate Google Auth users
+  username    String?     // Nullable to make it optional
+  preferences UserPreference[]
+  recipes     Recipe[]
+  tips        Tip[]
+  contexts    Context[]
+  @@map("users")
+}
+
+model DietType {
+  dietId      Int       @id @default(autoincrement())
+  dietName    String    @unique
+  preferences UserPreference[]
+  recipes     Recipe[]
+}
+
+model UserPreference {
+  preferenceId Int      @id @default(autoincrement())
+  uid          Int
+  dietId       Int
+
+  user     User     @relation(fields: [uid], references: [uid], onDelete: Cascade)
+  dietType DietType @relation(fields: [dietId], references: [dietId], onDelete: Cascade)
+}
+
+model Context {
+  chatId       Int       @id @default(autoincrement())
+  uid          Int
+  userQuestion String
+  chatResponse String
+  recipeId     Int?      // Foreign key for Recipe
+  tipId        Int?      // Foreign key for Tip
+  timestamp    DateTime  @default(now())
+
+  user   User    @relation(fields: [uid], references: [uid])
+  recipe Recipe? @relation(fields: [recipeId], references: [recipeId], onDelete: SetNull)
+  tip    Tip?    @relation(fields: [tipId], references: [tipId], onDelete: SetNull)
+}
+
+model Recipe {
+  recipeId     Int       @id @default(autoincrement())
+  uid          Int
+  recipeName   String
+  ingredients  Json
+  instructions String
+  prepTime     Int?
+  dietId       Int
+  timestamp    DateTime  @default(now())
+
+  user     User      @relation(fields: [uid], references: [uid])
+  dietType DietType  @relation(fields: [dietId], references: [dietId], onDelete: Cascade)
+  contexts Context[]
+}
+
+model Tip {
+  tipId     Int       @id @default(autoincrement())
+  uid       Int
+  tip       String
+  timestamp DateTime  @default(now())
+
+  user     User      @relation(fields: [uid], references: [uid])
+  contexts Context[]
+}

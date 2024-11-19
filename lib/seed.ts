@@ -1,88 +1,79 @@
-import { db } from "@vercel/postgres";
-import { titles } from "@/seed/titles";
+import { Pool } from 'pg';
 
-const client = await db.connect();
+// Create a connection pool for your Vercel PostgreSQL database
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+  ssl: { rejectUnauthorized: false },
+});
 
-export function begin() {
-  client.sql`BEGIN`;
+async function runSQL(query: string) {
+  const client = await pool.connect();
+  try {
+    await client.query(query);
+  } finally {
+    client.release();
+  }
 }
 
-export function commit() {
-  client.sql`COMMIT`;
-}
-
-export function rollback() {
-  client.sql`ROLLBACK`;
-}
-
-export async function seedTitles() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-  await client.sql`
-    CREATE TABLE IF NOT EXISTS titles (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      title VARCHAR(255) NOT NULL,
-      synopsis VARCHAR(255) NOT NULL,
-      released INT NOT NULL,
-      genre VARCHAR(255) NOT NULL
+// Seed the database
+export async function seedDatabase() {
+  await runSQL(`
+    -- Create independent tables first
+    CREATE TABLE IF NOT EXISTS users (
+      uid SERIAL PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL
     );
-  `;
-
-  const insertedTitles = await Promise.all(
-    titles.map((title) => {
-      try {
-        client.sql`
-          INSERT INTO titles (id, title, synopsis, released, genre)
-          VALUES (${title.id}, ${title.title}, ${title.synopsis}, ${title.released}, ${title.genre})
-          ON CONFLICT (id) DO NOTHING;
-        `;
-      } catch (error) {
-        console.log("Error inserting title:", title.id);
-        console.log(error);
-      }
-    })
-  );
-
-  return insertedTitles;
-}
-
-export async function seedFavorites() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-  await client.sql`
-    CREATE TABLE IF NOT EXISTS favorites (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      title_id UUID NOT NULL,
-      user_id VARCHAR(255) NOT NULL,
-      FOREIGN KEY (title_id) REFERENCES titles(id)
+    CREATE TABLE IF NOT EXISTS diet_types (
+      dietId SERIAL PRIMARY KEY,
+      dietName TEXT NOT NULL UNIQUE
     );
-  `;
-}
-
-export async function seedWatchLater() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-  await client.sql`
-    CREATE TABLE IF NOT EXISTS watchLater (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      title_id UUID NOT NULL,
-      user_id VARCHAR(255) NOT NULL,
-      FOREIGN KEY (title_id) REFERENCES titles(id)
+  
+    -- Create tables with foreign key dependencies
+    CREATE TABLE IF NOT EXISTS user_preferences (
+      preferenceId SERIAL PRIMARY KEY,
+      uid INT NOT NULL REFERENCES users(uid),
+      dietId INT NOT NULL REFERENCES diet_types(dietId)
     );
-  `;
-}
-
-export async function seedActivity() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-  await client.sql`
-    CREATE TABLE IF NOT EXISTS activities (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      timestamp TIMESTAMP DEFAULT NOW(),
-      title_id UUID NOT NULL,
-      user_id VARCHAR(255) NOT NULL,
-      activity VARCHAR(255) NOT NULL,
-      FOREIGN KEY (title_id) REFERENCES titles(id)
+    CREATE TABLE IF NOT EXISTS recipes (
+      recipeId SERIAL PRIMARY KEY,
+      uid INT NOT NULL REFERENCES users(uid),
+      recipeName TEXT NOT NULL,
+      ingredients JSONB NOT NULL,
+      instructions TEXT NOT NULL,
+      prepTime INT,
+      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-  `;
+    CREATE TABLE IF NOT EXISTS tips (
+      tipId SERIAL PRIMARY KEY,
+      uid INT NOT NULL REFERENCES users(uid),
+      tip TEXT NOT NULL,
+      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS user_context (
+      chatId SERIAL PRIMARY KEY,
+      uid INT NOT NULL REFERENCES users(uid),
+      userQuestion TEXT NOT NULL,
+      chatResponse TEXT NOT NULL,
+      recipeId INT REFERENCES recipes(recipeId) ON DELETE SET NULL,
+      tipId INT REFERENCES tips(tipId) ON DELETE SET NULL,
+      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
+  // Seed data
+  await runSQL(`
+    INSERT INTO users (email, password) VALUES
+      ('bob@example.com', 'hashed_password'),
+      ('taylor@example.com', 'hashed_password');
+  `);
+  await runSQL(`
+    INSERT INTO diet_types (dietName) VALUES
+      ('GlutenFree'),
+      ('LowFODMAP'),
+      ('Mediterranean'),
+      ('DASH'),
+      ('Anti-inflammatory'),
+      ('LowCal-LowFat');
+  `);
 }
