@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "@tailwindcss/forms": "0.5.9",
     "@types/bcryptjs": "2.4.6",
     "@vercel/postgres": "0.10.0",
@@ -29,6 +30,8 @@
     "@types/node": "20.16.5",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "dotenv-cli": "^7.4.3",
+    "prisma": "^5.22.0",
     "typescript": "5.6.3"
   },
   "overrides": {
