@@ -1,18 +1,11 @@
 {
-  "name": "your-project-name",
   "private": true,
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbo",
-    "start": "next start",
-    "expo-start": "expo start",
-    "expo-android": "expo start --android",
-    "expo-ios": "expo start --ios",
-    "expo-web": "expo start --web"
+    "start": "next start"
   },
   "dependencies": {
-    "@expo/vector-icons": "^14.0.2",
-    "@react-navigation/native": "^6.0.2",
     "@tailwindcss/forms": "0.5.9",
     "@types/bcryptjs": "2.4.6",
     "@vercel/postgres": "0.10.0",
@@ -20,43 +13,25 @@
     "autoprefixer": "10.4.20",
     "bcryptjs": "2.4.3",
     "clsx": "2.1.1",
-    "expo": "~51.0.28",
-    "expo-constants": "~16.0.2",
-    "expo-font": "~12.0.9",
-    "expo-linking": "~6.3.1",
-    "expo-router": "~3.5.23",
-    "expo-splash-screen": "~0.27.5",
-    "expo-status-bar": "~1.12.1",
-    "expo-system-ui": "~3.0.7",
-    "expo-web-browser": "~13.0.3",
     "kysely": "^0.27.4",
     "next": "15.0.0",
     "next-auth": "5.0.0-beta.25",
     "postcss": "8.4.47",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-native": "0.74.5",
-    "react-native-gesture-handler": "~2.16.1",
-    "react-native-reanimated": "~3.10.1",
-    "react-native-safe-area-context": "4.10.5",
-    "react-native-screens": "3.31.1",
-    "react-native-web": "^0.19.13",
+    "react": "19.0.0-rc-65a56d0e-20241020",
+    "react-dom": "19.0.0-rc-65a56d0e-20241020",
     "tailwindcss": "3.4.12",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
     "@types/bcrypt": "^5.0.2",
-    "@types/jest": "^29.5.12",
     "@types/node": "20.16.5",
-    "@types/react": "~18.2.45",
-    "@types/react-dom": "~18.2.25",
-    "@types/react-test-renderer": "^18.0.7",
-    "jest": "^29.2.1",
-    "jest-expo": "~51.0.3",
-    "react-test-renderer": "18.2.0",
-    "typescript": "~5.3.3"
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "typescript": "5.6.3"
   },
-  "overrides": {}
+  "overrides": {
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+  }
 }
