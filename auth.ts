@@ -1,24 +1,28 @@
 import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  secret: process.env.NEXTAUTH_SECRET, // Ensure this environment variable is set
   theme: {
     brandColor: "#1ED2AF",
     logo: "/logo.png",
     buttonText: "#ffffff",
   },
-  providers: [], // Add providers here
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID, // Set these in your environment variables
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+  pages: {
+    signIn: '/login', // Optional: Customize the sign-in page
+  },
   callbacks: {
-    authorized: async ({ request, auth }) => {
-      const path = request.nextUrl.pathname; // Correctly access request object
-
-      // Allow public access to all API routes
-      if (path.startsWith("/api/")) {
-        return true;
-      }
-
-      // Require authentication for other routes
-      return !!auth; // True if the user is authenticated
+    async authorized({ auth }) {
+      return !!auth;
+    },
+    async redirect({ url, baseUrl }) {
+      return baseUrl;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 });
