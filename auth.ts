@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   theme: {
@@ -6,11 +7,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     logo: "/logo.png",
     buttonText: "#ffffff",
   },
-  providers: [],
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID, // Set these in your environment variables
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+  pages: {
+    signIn: '/login', // Optional: Customize the sign-in page
+  },
   callbacks: {
-    authorized: async ({ auth }) => {
-      // Logged in users are authenticated, otherwise redirect to login page
+    async authorized({ auth }) {
       return !!auth;
     },
+    async redirect({ url, baseUrl }) {
+      return baseUrl;
+    },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 });
