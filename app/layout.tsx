@@ -2,7 +2,7 @@ import "@/app/global.css";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "VitalBite",
+  title: "Vital Bite | Simple Food for Complex Needs",
 };
 
 type Props = {
