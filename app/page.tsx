@@ -1,9 +1,7 @@
-import React from 'react';
-
-export const App = () => {
+export default async function Page() {
   return (
     <div className="flex items-center justify-center h-screen">
-      Hello VitalBite
+      Hello Cinema Guru
     </div>
   );
-};
+}

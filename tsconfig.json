@@ -1,21 +1,17 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node", // Set moduleResolution to "node"
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve", // Use "react-jsx" for Expo compatibility
+    "jsx": "preserve",
     "incremental": true,
     "plugins": [
       {
@@ -24,12 +20,7 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "react-native-web": [
-        "node_modules/react-native-web"
-      ] // Include react-native-web for web compatibility
+      "@/*": ["./*"]
     }
   },
   "include": [
@@ -40,8 +31,5 @@
     "seed/users.ts",
     "scripts/seed.js"
   ],
-  "exclude": [
-    "node_modules"
-  ],
-  "extends": "expo/tsconfig.base"
+  "exclude": ["node_modules"]
 }
