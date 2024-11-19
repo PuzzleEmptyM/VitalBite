@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 
 // Create a connection pool for your Vercel PostgreSQL database
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
+  connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
 });
 
