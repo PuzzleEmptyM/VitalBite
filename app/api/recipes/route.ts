@@ -26,7 +26,7 @@ async function runSQL(query: string, params: any[] = []) {
   }
 }
 
-// API route
+// API route to fetch recipes by UID
 export const GET = async (req: Request) => {
   try {
     console.log("Fetching recipes by UID...");
@@ -43,9 +43,17 @@ export const GET = async (req: Request) => {
 
     // SQL query to fetch recipes by UID
     const query = `
-      SELECT "RecipeID", "UID", "RecipeName", "Ingredients", "Instructions", "PrepTime", "TimeStamp", "DietID" 
+      SELECT 
+        "recipeID", 
+        "uid", 
+        "recipeName", 
+        "ingredients", 
+        "instructions", 
+        "prepTime", 
+        "timestamp", 
+        "dietId" 
       FROM "Recipe"
-      WHERE "UID" = $1
+      WHERE "uid" = $1
     `;
     const result = await runSQL(query, [uid]);
 
