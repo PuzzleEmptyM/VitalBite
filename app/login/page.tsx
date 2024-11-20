@@ -1,11 +1,23 @@
 "use client";
 
 import { getProviders, signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function LoginPage() {
+  // Define providers state with a proper type
+  const [providers, setProviders] = useState<Record<string, any> | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Fetch providers on component mount
+  useEffect(() => {
+    const fetchProviders = async () => {
+      const providers = await getProviders();
+      setProviders(providers); // Save providers to state
+    };
+
+    fetchProviders();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
@@ -48,13 +60,17 @@ export default function LoginPage() {
         Login
       </button>
 
-      {/* Sign in with Google Button */}
-      <button
-        onClick={() => signIn("google")}
-        className="w-full max-w-sm p-3 bg-teal text-white rounded-lg font-playfair font-semibold mb-4"
-      >
-        Sign in with Google
-      </button>
+      {/* Sign-in Buttons for Providers */}
+      {providers &&
+        Object.values(providers).map((provider: any) => (
+          <button
+            key={provider.name}
+            onClick={() => signIn(provider.id)}
+            className="w-full max-w-sm p-3 bg-teal text-white rounded-lg font-playfair font-semibold mb-4"
+          >
+            Sign in with {provider.name}
+          </button>
+        ))}
 
       {/* Create Account Link */}
       <a
