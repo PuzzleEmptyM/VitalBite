@@ -28,12 +28,17 @@ const Page = () => {
             </button>
           </div>
 
-          <div className="w-1/3 pr-0 pl-6">
-            <img src="/images/health.png" alt="Medical Condition" className="w-full h-auto max-w-none mb-2" />
+          {/* Image Section */}
+          <div className="w-1/3 pr-0 pl-2 pt-0 flex-shrink-0">
+            <img 
+              src="/images/health.png" 
+              alt="Medical Condition" 
+              className="w-full h-full mb-2" 
+            />
           </div>
         </div>
-
       </section>
+
 
       {/* Features Section */}
       <section className="grid grid-cols-2 gap-4">
