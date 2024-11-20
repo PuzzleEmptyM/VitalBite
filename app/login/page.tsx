@@ -23,7 +23,7 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
       {/* Header Section */}
       <header className="absolute top-0 left-0 p-4">
-        <img src="/images/vb_logo.png" alt="VB Logo" className="w-48 h-32 pl-14" />
+        <img src="/images/vb_logo.png" alt="VB Logo" className="w-48 h-32 pl-6" />
       </header>
 
       {/* Entrance Image */}
