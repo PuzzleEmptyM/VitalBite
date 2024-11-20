@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import Head from "next/head";
 
 export default function IngredientsAnalyzerPage() {
@@ -7,15 +8,10 @@ export default function IngredientsAnalyzerPage() {
         <title>Ingredient Analyzer</title>
       </Head>
 
-      {/* Header Section */}
-      <header className="flex justify-between items-center w-full p-4">
-        {/* Logo */}
-        <img src="/images/vb_logo.png" alt="VB Logo" className="w-24" />
-        {/* User Badge */}
-        <div className="flex items-center justify-center w-12 h-12 bg-forest_green text-white rounded-full">
-          TW
+        <div>
+        {/* Header Section */}
+            <Header />
         </div>
-      </header>
 
       {/* Main Content */}
       <main className="flex flex-col items-center w-full mt-8 space-y-6">

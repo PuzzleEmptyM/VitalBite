@@ -2,6 +2,8 @@
 
 import { getProviders, signIn } from "next-auth/react";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginPage() {
   // Define providers state with a proper type
@@ -23,12 +25,12 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
       {/* Header Section */}
       <header className="absolute top-0 left-0 p-4">
-        <img src="/images/vb_logo.png" alt="VB Logo" className="w-48 h-32 pl-6" />
+        <Image src="/images/vb_logo.png" alt="VB Logo" className="w-48 h-32 pl-6" />
       </header>
 
       {/* Entrance Image */}
       <section>
-        <img src="/images/vitalbite.png" alt="VitalBite Logo" className="mx-auto mb-2" />
+        <Image src="/images/vitalbite.png" alt="VitalBite Logo" className="mx-auto mb-2" />
       </section>
 
       {/* Title */}
@@ -73,12 +75,12 @@ export default function LoginPage() {
         ))}
 
       {/* Create Account Link */}
-      <a
+      <Link
         href="/create-account"
         className="text-teal font-semibold font-playfair text-sm mt-4"
       >
         Create account
-      </a>
+      </Link>
 
       {/* Footer */}
       <footer className="absolute bottom-0 w-full py-2">
