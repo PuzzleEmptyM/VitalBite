@@ -32,7 +32,7 @@ export const GET = async () => {
     console.log("Fetching diets...");
 
     // SQL query to fetch all diet types
-    const result = await runSQL('SELECT * FROM "DietType"');
+    const result = await runSQL('SELECT * FROM "diettype"');
 
     // Check if any results were returned
     if (result.rows.length === 0) {
