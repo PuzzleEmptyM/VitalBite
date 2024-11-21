@@ -17,15 +17,15 @@ export default function SignUpPage() {
           
 
           {/* Welcome Text */}
-          <h1 className="mt-4 text-4xl font-bold text-teal font-playfair text-justify pt-14">
-            Welcome to <br /> <span className="text-justify pt-6 pl-6"> VitalBite </span>
+          <h1 className="mt-4 text-4xl font-bold text-teal font-playfair text-justify pb-4">
+            Welcome to <br /> <span className="text-justify pt-2 pl-6"> VitalBite </span>
           </h1>
 
           {/* Icon */}
           <img
             src="/images/salad.png"
             alt="VitalBite Logo"
-            className="w-48 h-48 mt-4"
+            className="w-48 h-48 mt-2"
           />
         </div>
 
