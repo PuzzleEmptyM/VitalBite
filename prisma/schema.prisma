@@ -8,68 +8,66 @@ datasource db {
 }
 
 model User {
-  uid         Int         @id @default(autoincrement())
-  email       String      @unique
-  password    String?     // Nullable to accommodate Google Auth users
-  username    String?     // Nullable to make it optional
-  preferences UserPreference[]
-  recipes     Recipe[]
-  tips        Tip[]
-  contexts    Context[]
+  uid            Int              @id @default(autoincrement())
+  email          String           @unique
+  password       String?
+  username       String?
+  context        context[]
+  recipe         recipe[]
+  tip            tip[]
+  userpreference userpreference[]
+
   @@map("users")
 }
 
-model DietType {
-  dietId      Int       @id @default(autoincrement())
-  dietName    String    @unique
-  preferences UserPreference[]
-  recipes     Recipe[]
-}
-
-model UserPreference {
-  preferenceId Int      @id @default(autoincrement())
-  uid          Int
-  dietId       Int
-
-  user     User     @relation(fields: [uid], references: [uid], onDelete: Cascade)
-  dietType DietType @relation(fields: [dietId], references: [dietId], onDelete: Cascade)
-}
-
-model Context {
-  chatId       Int       @id @default(autoincrement())
+model context {
+  chatId       Int      @id(map: "Context_pkey") @default(autoincrement())
   uid          Int
   userQuestion String
   chatResponse String
-  recipeId     Int?      // Foreign key for Recipe
-  tipId        Int?      // Foreign key for Tip
-  timestamp    DateTime  @default(now())
-
-  user   User    @relation(fields: [uid], references: [uid])
-  recipe Recipe? @relation(fields: [recipeId], references: [recipeId], onDelete: SetNull)
-  tip    Tip?    @relation(fields: [tipId], references: [tipId], onDelete: SetNull)
+  recipeId     Int?
+  tipId        Int?
+  timestamp    DateTime @default(now())
+  recipe       recipe?  @relation(fields: [recipeId], references: [recipeId], map: "Context_recipeId_fkey")
+  tip          tip?     @relation(fields: [tipId], references: [tipId], map: "Context_tipId_fkey")
+  users        User     @relation(fields: [uid], references: [uid], map: "Context_uid_fkey")
 }
 
-model Recipe {
-  recipeId     Int       @id @default(autoincrement())
+model diettype {
+  dietId         Int              @id(map: "DietType_pkey") @default(autoincrement())
+  dietName       String           @unique(map: "DietType_dietName_key")
+  recipe         recipe[]
+  userpreference userpreference[]
+}
+
+model recipe {
+  recipeId     Int       @id(map: "Recipe_pkey") @default(autoincrement())
   uid          Int
   recipeName   String
-  ingredients  Json
-  instructions String
+  ingredients  Json      @db.Json
+  instructions Json      @db.Json
   prepTime     Int?
-  dietId       Int
   timestamp    DateTime  @default(now())
-
-  user     User      @relation(fields: [uid], references: [uid])
-  dietType DietType  @relation(fields: [dietId], references: [dietId], onDelete: Cascade)
-  contexts Context[]
+  dietId       Int
+  context      context[]
+  diettype     diettype  @relation(fields: [dietId], references: [dietId], onDelete: Cascade, map: "Recipe_dietId_fkey")
+  users        User      @relation(fields: [uid], references: [uid], map: "Recipe_uid_fkey")
 }
 
-model Tip {
-  tipId     Int       @id @default(autoincrement())
+model tip {
+  tipId     Int       @id(map: "Tip_pkey") @default(autoincrement())
   uid       Int
   tip       String
   timestamp DateTime  @default(now())
+  summary   String
+  context   context[]
+  users     User      @relation(fields: [uid], references: [uid], map: "Tip_uid_fkey")
+}
 
-  user     User      @relation(fields: [uid], references: [uid])
-  contexts Context[]
+model userpreference {
+  preferenceId Int      @id(map: "UserPreference_pkey") @default(autoincrement())
+  uid          Int
+  dietId       Int
+  diettype     diettype @relation(fields: [dietId], references: [dietId], onDelete: Cascade, map: "UserPreference_dietId_fkey")
+  users        User     @relation(fields: [uid], references: [uid], onDelete: Cascade, map: "UserPreference_uid_fkey")
 }
