@@ -1,6 +1,8 @@
-## VitalBite
+## Atlas Cinema Guru
 
-Starter README for VitalBite.
+This is the starter template for the Atlas Cinema Guru project. It contains the starting code for the movie database application.
+
+![](./images/task-2-a.png)
 
 ### Getting Started
 
