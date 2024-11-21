@@ -5,6 +5,7 @@ import ConditionSelector from "../../components/ConditionSelector";
 import LogoHeader from "@/components/LogoHeader";
 import DisclaimerFooter from "@/components/DisclaimerFooter";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function SignUpPage() {
   return (
@@ -16,15 +17,15 @@ export default function SignUpPage() {
           
 
           {/* Welcome Text */}
-          <h1 className="mt-4 text-4xl font-bold text-teal font-playfair text-justify pt-14">
-            Welcome to <br /> <span className="text-justify pt-6 pl-6"> VitalBite </span>
+          <h1 className="mt-4 text-4xl font-bold text-teal font-playfair text-justify pb-4">
+            Welcome to <br /> <span className="text-justify pt-2 pl-6"> VitalBite </span>
           </h1>
 
           {/* Icon */}
           <img
             src="/images/salad.png"
             alt="VitalBite Logo"
-            className="w-48 h-48 mt-4"
+            className="w-48 h-48 mt-2"
           />
         </div>
 
@@ -45,6 +46,13 @@ export default function SignUpPage() {
           {/* Get Started Button */}
           <GetStartedButton text="Get Started" />
         </form>
+
+          {/* Create Account Link */}
+        <Link
+          href="/login"
+          className="text-teal font-semibold font-playfair flex justify-center text-sm mt-5">
+          Already have an account? Log in here
+        </Link>
 
         {/* Footer */}
       <DisclaimerFooter />
