@@ -5,6 +5,7 @@ import ConditionSelector from "../../components/ConditionSelector";
 import LogoHeader from "@/components/LogoHeader";
 import DisclaimerFooter from "@/components/DisclaimerFooter";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function SignUpPage() {
   return (
@@ -45,6 +46,13 @@ export default function SignUpPage() {
           {/* Get Started Button */}
           <GetStartedButton text="Get Started" />
         </form>
+
+          {/* Create Account Link */}
+        <Link
+          href="/login"
+          className="text-teal font-semibold font-playfair flex justify-center text-sm mt-5">
+          Already have an account? Log in here
+        </Link>
 
         {/* Footer */}
       <DisclaimerFooter />
