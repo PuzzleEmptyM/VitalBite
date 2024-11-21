@@ -30,8 +30,10 @@ async function runSQL(query: string, params: any[] = []) {
 export const GET = async (req: Request) => {
   try {
     console.log("Fetching recipes by UID...");
+
+    // Extract search parameters from the URL
     const { searchParams } = new URL(req.url);
-    const uid = searchParams.get("uid");
+    const uid = searchParams.get("uid"); // Get the 'uid' from the query string
 
     // Validate UID
     if (!uid) {
@@ -54,13 +56,13 @@ export const GET = async (req: Request) => {
       FROM "recipe"
       WHERE "uid" = $1
     `;
-    const result = await runSQL(query, [uid]);
+    const result = await runSQL(query, [uid]); // Execute the query with the provided UID
 
     // Check if any results were returned
     if (result.rows.length === 0) {
       console.log(`No recipes found for UID: ${uid}`);
       return NextResponse.json(
-        { message: "No recipes found" },
+        { message: "No recipes found" }, // If no recipes were found, return a message
         { status: 404 }
       );
     }
@@ -71,7 +73,7 @@ export const GET = async (req: Request) => {
   } catch (error) {
     console.error("Error fetching recipes:", error);
     return NextResponse.json(
-      { error: "Failed to fetch recipes" },
+      { error: "Failed to fetch recipes" }, // If an error occurs, return an error message
       { status: 500 }
     );
   }
