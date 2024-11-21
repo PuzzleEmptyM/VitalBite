@@ -28,12 +28,17 @@ const Page = () => {
             </button>
           </div>
 
-          <div className="w-full flex justify-center">
-            <img src="/images/health.png" alt="Medical Condition" className="w-110 h-110 sm:h-112 md:h-128 lg:h-140 xl:h-160 object-contain mb-2" />
+          {/* Image Section */}
+          <div className="w-1/3 pr-0 pl-2 pt-0 flex-shrink-0">
+            <img 
+              src="/images/health.png" 
+              alt="Medical Condition" 
+              className="w-full h-full mb-2" 
+            />
           </div>
         </div>
-
       </section>
+
 
       {/* Features Section */}
       <section className="grid grid-cols-2 gap-4">

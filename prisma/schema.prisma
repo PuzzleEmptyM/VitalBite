@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model User {
+  uid            Int              @id @default(autoincrement())
+  email          String           @unique
+  password       String?
+  username       String?
+  context        context[]
+  recipe         recipe[]
+  tip            tip[]
+  userpreference userpreference[]
+
+  @@map("users")
+}
+
+model context {
+  chatId       Int      @id(map: "Context_pkey") @default(autoincrement())
+  uid          Int
+  userQuestion String
+  chatResponse String
+  recipeId     Int?
+  tipId        Int?
+  timestamp    DateTime @default(now())
+  recipe       recipe?  @relation(fields: [recipeId], references: [recipeId], map: "Context_recipeId_fkey")
+  tip          tip?     @relation(fields: [tipId], references: [tipId], map: "Context_tipId_fkey")
+  users        User     @relation(fields: [uid], references: [uid], map: "Context_uid_fkey")
+}
+
+model diettype {
+  dietId         Int              @id(map: "DietType_pkey") @default(autoincrement())
+  dietName       String           @unique(map: "DietType_dietName_key")
+  recipe         recipe[]
+  userpreference userpreference[]
+}
+
+model recipe {
+  recipeId     Int       @id(map: "Recipe_pkey") @default(autoincrement())
+  uid          Int
+  recipeName   String
+  ingredients  Json      @db.Json
+  instructions Json      @db.Json
+  prepTime     Int?
+  timestamp    DateTime  @default(now())
+  dietId       Int
+  context      context[]
+  diettype     diettype  @relation(fields: [dietId], references: [dietId], onDelete: Cascade, map: "Recipe_dietId_fkey")
+  users        User      @relation(fields: [uid], references: [uid], map: "Recipe_uid_fkey")
+}
+
+model tip {
+  tipId     Int       @id(map: "Tip_pkey") @default(autoincrement())
+  uid       Int
+  tip       String
+  timestamp DateTime  @default(now())
+  summary   String
+  context   context[]
+  users     User      @relation(fields: [uid], references: [uid], map: "Tip_uid_fkey")
+}
+
+model userpreference {
+  preferenceId Int      @id(map: "UserPreference_pkey") @default(autoincrement())
+  uid          Int
+  dietId       Int
+  diettype     diettype @relation(fields: [dietId], references: [dietId], onDelete: Cascade, map: "UserPreference_dietId_fkey")
+  users        User     @relation(fields: [uid], references: [uid], onDelete: Cascade, map: "UserPreference_uid_fkey")
+}
