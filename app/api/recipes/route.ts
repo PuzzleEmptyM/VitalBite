@@ -26,30 +26,7 @@ async function runSQL(query: string, params: any[] = []) {
   }
 }
 
-// --------------------------------------------
-// API ROUTE TO FETCH RECIPES BY UID
-// --------------------------------------------
-// This API route fetches recipes for a specific user based on their UID.
-// Example Usage:
-// - Request: GET /api/recipes?uid=<uid>
-// - Example: GET /api/recipes?uid=1
-// - Response (Success):
-//   [
-//     {
-//       "recipeID": 1,
-//       "uid": 1,
-//       "recipeName": "Steamed Broccoli",
-//       "ingredients": ["Water", "Broccoli"],
-//       "instructions": ["Fry stuff", "Cook stuff", "etc"],
-//       "prepTime": 15,
-//       "timestamp": "2024-11-18T10:05:00.000Z",
-//       "dietId": 5
-//     }
-//   ]
-// - Response (No Recipes Found): 
-//   { "message": "No recipes found" }
-// - Response (Error): 
-//   { "error": "Failed to fetch recipes" }
+// API route to fetch recipes by UID
 export const GET = async (req: Request) => {
   try {
     console.log("Fetching recipes by UID...");
