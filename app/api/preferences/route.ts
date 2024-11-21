@@ -26,14 +26,27 @@ async function runSQL(query: string, params: any[] = []) {
   }
 }
 
-// API route to fetch recipes by UID
+// --------------------------------------------
+// API ROUTE TO FETCH DIET IDS FOR A SPECIFIC UID
+// --------------------------------------------
+// This API route fetches all diet IDs associated with a specific user (UID).
+// Example Usage:
+// - Request: GET /api/preferences?uid=<uid>
+// - Example: GET /api/preferences?uid=1
+// - Response (Success):
+//   [
+//     { "dietId": 1 },
+//     { "dietId": 5 }
+//   ]
+// - Response (No Preferences Found):
+//   { "message": "No preferences found" }
+// - Response (Error):
+//   { "error": "Failed to fetch preferences" }
 export const GET = async (req: Request) => {
   try {
-    console.log("Fetching recipes by UID...");
-
-    // Extract search parameters from the URL
+    console.log("Fetching diet IDs by UID...");
     const { searchParams } = new URL(req.url);
-    const uid = searchParams.get("uid"); // Get the 'uid' from the query string
+    const uid = searchParams.get("uid");
 
     // Validate UID
     if (!uid) {
@@ -41,39 +54,32 @@ export const GET = async (req: Request) => {
       return NextResponse.json({ error: "UID is required" }, { status: 400 });
     }
 
-    console.log(`Fetching recipes for UID: ${uid}`);
+    console.log(`Fetching diet IDs for UID: ${uid}`);
 
-    // SQL query to fetch recipes by UID
+    // SQL query to fetch diet IDs for the specified UID
     const query = `
-      SELECT 
-        "recipeId", 
-        "uid", 
-        "recipeName", 
-        "ingredients", 
-        "instructions", 
-        "prepTime", 
-        "timestamp"
-      FROM "recipe"
+      SELECT "dietId"
+      FROM "userpreference"
       WHERE "uid" = $1
     `;
-    const result = await runSQL(query, [uid]); // Execute the query with the provided UID
+    const result = await runSQL(query, [uid]);
 
     // Check if any results were returned
     if (result.rows.length === 0) {
-      console.log(`No recipes found for UID: ${uid}`);
+      console.log(`No preferences found for UID: ${uid}`);
       return NextResponse.json(
-        { message: "No recipes found" }, // If no recipes were found, return a message
+        { message: "No preferences found" },
         { status: 404 }
       );
     }
 
-    console.log("Recipes fetched successfully:", result.rows);
-    // Return the fetched recipes as a JSON response
+    console.log("Preferences fetched successfully:", result.rows);
+    // Return the fetched diet IDs as a JSON response
     return NextResponse.json(result.rows);
   } catch (error) {
-    console.error("Error fetching recipes:", error);
+    console.error("Error fetching preferences:", error);
     return NextResponse.json(
-      { error: "Failed to fetch recipes" }, // If an error occurs, return an error message
+      { error: "Failed to fetch preferences" },
       { status: 500 }
     );
   }

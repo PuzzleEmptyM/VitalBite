@@ -17,11 +17,11 @@ const Page = () => {
         <h2 className="text-4xl font-bold font-hellowin text-teal">Welcome, Tiffany</h2>
         <div className="mt-4 text-left font-playfair flex items-center justify-between">
           <div className="w-full text-left ml-4">
-            <h3 className="text-xl font-semibold text-forest_green">What is celiac disease?</h3>
-            <p className="text-sm text-forest_green mt-2">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Etiam vitae elit urna. Nam
-              maximus accumsan ligula et ultrices.
+            <h3 className="text-xl font-bold text-forest_green">Understand Your Condition</h3>
+            <p className="text-sm text-forest_green mt-2 font-semibold">
+              Get clear, reliable information about your medical
+              condition(s) to make informed decisions
+              about your health and lifestyle
             </p>
             <button className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md">
               Learn More
@@ -74,9 +74,9 @@ const Page = () => {
         </div>
 
         <div className="w-full text-left ml-8">
-          <h3 className="text-lg font-semibold text-forest_green">AI Chatbot</h3>
-          <p className="text-sm text-forest_green mt-2">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id odio maximus.
+          <h3 className="text-lg font-bold text-forest_green">AI Chatbot</h3>
+          <p className="text-sm text-forest_green mt-2 font-semibold">
+          Chat with our AI assistant to get personalized recipes, meal suggestions, and lifestyle tips tailored to your health needs. Your questions, answered instantly and effortlessly!
           </p>
           <button className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md">
             Try Now
