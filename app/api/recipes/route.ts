@@ -50,8 +50,7 @@ export const GET = async (req: Request) => {
         "ingredients", 
         "instructions", 
         "prepTime", 
-        "timestamp", 
-        "dietId" 
+        "timestamp"
       FROM "recipe"
       WHERE "uid" = $1
     `;
