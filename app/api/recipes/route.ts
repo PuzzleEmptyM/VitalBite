@@ -44,7 +44,7 @@ export const GET = async (req: Request) => {
     // SQL query to fetch recipes by UID
     const query = `
       SELECT 
-        "recipeID", 
+        "recipeId", 
         "uid", 
         "recipeName", 
         "ingredients", 
@@ -52,7 +52,7 @@ export const GET = async (req: Request) => {
         "prepTime", 
         "timestamp", 
         "dietId" 
-      FROM "Recipe"
+      FROM "recipe"
       WHERE "uid" = $1
     `;
     const result = await runSQL(query, [uid]);
