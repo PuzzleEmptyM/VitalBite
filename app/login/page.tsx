@@ -76,7 +76,7 @@ export default function LoginPage() {
 
       {/* Create Account Link */}
       <Link
-        href="/create-account"
+        href="/signup"
         className="text-teal font-semibold font-playfair text-sm mt-4"
       >
         Create account
