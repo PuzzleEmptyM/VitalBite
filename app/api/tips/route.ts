@@ -26,14 +26,26 @@ async function runSQL(query: string, params: any[] = []) {
   }
 }
 
-// API route to fetch recipes by UID
+// --------------------------------------------
+// API ROUTE TO FETCH TIPS FOR A SPECIFIC UID
+// --------------------------------------------
+// This API route fetches all tips associated with a specific user (UID).
+// Example Usage:
+// - Request: GET /api/tips?uid=<uid>
+// - Example: GET /api/tips?uid=1
+// - Response (Success):
+//   [
+//     { "tipId": 1, "tip": "For a person with IBS following a ...", "timestamp": "2024-11-20 10:05:00", "summary": "Beans are not recommended" }
+//   ]
+// - Response (No Tips Found): 
+//   { "message": "No tips found" }
+// - Response (Error): 
+//   { "error": "Failed to fetch tips" }
 export const GET = async (req: Request) => {
   try {
-    console.log("Fetching recipes by UID...");
-
-    // Extract search parameters from the URL
+    console.log("Fetching tips by UID...");
     const { searchParams } = new URL(req.url);
-    const uid = searchParams.get("uid"); // Get the 'uid' from the query string
+    const uid = searchParams.get("uid");
 
     // Validate UID
     if (!uid) {
@@ -41,39 +53,36 @@ export const GET = async (req: Request) => {
       return NextResponse.json({ error: "UID is required" }, { status: 400 });
     }
 
-    console.log(`Fetching recipes for UID: ${uid}`);
+    console.log(`Fetching tips for UID: ${uid}`);
 
-    // SQL query to fetch recipes by UID
+    // SQL query to fetch tips for the specified UID
     const query = `
       SELECT 
-        "recipeId", 
-        "uid", 
-        "recipeName", 
-        "ingredients", 
-        "instructions", 
-        "prepTime", 
-        "timestamp"
-      FROM "recipe"
+        "tipId", 
+        "tip", 
+        "timestamp", 
+        "summary"
+      FROM "tip"
       WHERE "uid" = $1
     `;
-    const result = await runSQL(query, [uid]); // Execute the query with the provided UID
+    const result = await runSQL(query, [uid]);
 
     // Check if any results were returned
     if (result.rows.length === 0) {
-      console.log(`No recipes found for UID: ${uid}`);
+      console.log(`No tips found for UID: ${uid}`);
       return NextResponse.json(
-        { message: "No recipes found" }, // If no recipes were found, return a message
+        { message: "No tips found" },
         { status: 404 }
       );
     }
 
-    console.log("Recipes fetched successfully:", result.rows);
-    // Return the fetched recipes as a JSON response
+    console.log("Tips fetched successfully:", result.rows);
+    // Return the fetched tips as a JSON response
     return NextResponse.json(result.rows);
   } catch (error) {
-    console.error("Error fetching recipes:", error);
+    console.error("Error fetching tips:", error);
     return NextResponse.json(
-      { error: "Failed to fetch recipes" }, // If an error occurs, return an error message
+      { error: "Failed to fetch tips" },
       { status: 500 }
     );
   }
