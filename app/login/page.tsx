@@ -25,12 +25,13 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
       {/* Header Section */}
       <header className="absolute top-0 left-0 p-4">
-        <Image src="/images/vb_logo.png" alt="VB Logo" className="w-48 h-32 pl-6" />
+      <img src="../../public/images/vb_logo.png" alt="VB Logo" className="w-20 h-20" />
+
       </header>
 
       {/* Entrance Image */}
       <section>
-        <Image src="/images/vitalbite.png" alt="VitalBite Logo" className="mx-auto mb-2" />
+        <img src="../../public/images/vitalbite.png" alt="VitalBite Logo" className="mx-auto mb-2" />
       </section>
 
       {/* Title */}
@@ -76,7 +77,7 @@ export default function LoginPage() {
 
       {/* Create Account Link */}
       <Link
-        href="/create-account"
+        href="/signup"
         className="text-teal font-semibold font-playfair text-sm mt-4"
       >
         Create account

@@ -49,7 +49,7 @@ export default function IngredientsAnalyzerPage() {
                     <div className="flex items-center justify-between w-full p-4 bg-beige rounded-md">
                       <div className="flex items-center space-x-1">
                         {/* carrot svg icon */}
-                        <Image
+                        <img
                           src="/icons/carrot.svg"
                           alt="Carrot Icon"
                           width={16}
