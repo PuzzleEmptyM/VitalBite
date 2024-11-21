@@ -9,7 +9,7 @@ import Image from "next/image";
 export default function SignUpPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <LogoHeader logoSrc="/images/vb_logo.png" altText="VB Logo" />
+      <img src="/images/vb_logo.png" alt="VB Logo" className="w-20 h-20" />
 
       <div className="w-11/12 max-w-md p-8 bg-white">
         <div className="flex flex-col items-center">
@@ -21,7 +21,7 @@ export default function SignUpPage() {
           </h1>
 
           {/* Icon */}
-          <Image
+          <img
             src="/images/salad.png"
             alt="VitalBite Logo"
             className="w-48 h-48 mt-4"
