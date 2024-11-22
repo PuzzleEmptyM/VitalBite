@@ -1,4 +1,7 @@
+"use client"
+
 import DisclaimerFooter from "@/components/DisclaimerFooter";
+import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
 import Head from "next/head";
 import Image from "next/image";
@@ -19,7 +22,7 @@ export default function IngredientsAnalyzerPage() {
         <div className="text-center">
           <h1 className="text-4xl font-light text-forest_green font-playfair relative pt-9">
             Ingredient Analyzer
-            <span className="absolute mt-4 left-1/2 -translate-x-1/2 bottom-[-8px] w-80 h-[2px] bg-forest_green"></span>
+            <span className="absolute mt-4 left-1/2 -translate-x-1/2 bottom-[-8px] w-80 h-[2px] rounded bg-forest_green"></span>
           </h1>
           <p className="text-forest_green font-playfair mt-4">
             Discover which diets align with any ingredient by simply searching to get instant insights
@@ -58,7 +61,8 @@ export default function IngredientsAnalyzerPage() {
                         />
                         <span className="text-forest_green font-playfair">{diet}</span>
                       </div>
-                      <span className="text-forest_green">{">"}</span>
+                      <button className="text-forest_green"
+                          onClick={() => alert("Diet selected!")}>{">"}</button>
                     </div>
                     {/* Divider */}
                     {index < 4 && (
@@ -71,9 +75,10 @@ export default function IngredientsAnalyzerPage() {
           </div>
         </div>
       </main>
-      {/* <div>
+      <div>
         <DisclaimerFooter />
-      </div> */}
+      </div>
+      <FooterNavigation />
     </div>
   );
 }

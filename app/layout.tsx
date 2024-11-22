@@ -12,7 +12,7 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body className={`antialiased  bg-[#00003c] text-white`}>{children}</body>
+      <body className={`antialiased  bg-[#ffff] text-black`}>{children}</body>
     </html>
   );
 }
