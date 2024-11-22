@@ -7,7 +7,7 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ text, onClick }) => (
   <button
-    onClick={() => alert("lets get started!")}
+    onClick={onClick}
     className="w-full h-10 mt-4 text-center text-white bg-teal rounded-md font-playfair hover:bg-forest_green"
   >
     {text}

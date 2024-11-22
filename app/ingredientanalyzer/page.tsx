@@ -21,7 +21,7 @@ export default function IngredientsAnalyzerPage() {
         <div className="text-center">
           <h1 className="text-4xl font-light text-forest_green font-playfair relative pt-9">
             Ingredient Analyzer
-            <span className="absolute mt-4 left-1/2 -translate-x-1/2 bottom-[-8px] w-80 h-[2px] bg-forest_green"></span>
+            <span className="absolute mt-4 left-1/2 -translate-x-1/2 bottom-[-8px] w-80 h-[2px] rounded bg-forest_green"></span>
           </h1>
           <p className="text-forest_green font-playfair mt-4">
             Discover which diets align with any ingredient by simply searching to get instant insights
