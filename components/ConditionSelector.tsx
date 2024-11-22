@@ -1,12 +1,12 @@
 import React from "react";
 
 const conditions = [
-  "Condition",
-  "Condition",
-  "Condition",
-  "Condition",
-  "Condition",
-  "No Condition",
+  "Diet",
+  "Diet",
+  "Diet",
+  "Diet",
+  "Diet",
+  "No Diet",
 ];
 
 const ConditionSelector: React.FC = () => (

@@ -4,6 +4,7 @@ import { getProviders, signIn } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import DisclaimerFooter from "@/components/DisclaimerFooter";
 
 export default function LoginPage() {
   // Define providers state with a proper type
@@ -115,9 +116,7 @@ export default function LoginPage() {
       </Link>
 
       {/* Footer */}
-      <footer className="absolute bottom-0 w-full py-2">
-        <p className="text-center text-forest_green font-playfair">Disclaimer</p>
-      </footer>
+      <DisclaimerFooter />
     </div>
   );
 }
