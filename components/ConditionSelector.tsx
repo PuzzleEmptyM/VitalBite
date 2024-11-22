@@ -15,6 +15,7 @@ const ConditionSelector: React.FC = () => (
       <button
         key={index}
         className="py-2 px-4 border border-gray-300 shadow-md text-teal font-playfair font-normal rounded-md hover:bg-forest_green hover:text-white"
+        onClick={() => alert("Diet selected")}
       >
         {condition}
       </button>

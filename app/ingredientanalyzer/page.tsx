@@ -1,3 +1,5 @@
+"use client"
+
 import DisclaimerFooter from "@/components/DisclaimerFooter";
 import Header from "@/components/Header";
 import Head from "next/head";
@@ -58,7 +60,8 @@ export default function IngredientsAnalyzerPage() {
                         />
                         <span className="text-forest_green font-playfair">{diet}</span>
                       </div>
-                      <span className="text-forest_green">{">"}</span>
+                      <button className="text-forest_green"
+                          onClick={() => alert("Diet selected!")}>{">"}</button>
                     </div>
                     {/* Divider */}
                     {index < 4 && (
@@ -71,9 +74,9 @@ export default function IngredientsAnalyzerPage() {
           </div>
         </div>
       </main>
-      {/* <div>
+      <div>
         <DisclaimerFooter />
-      </div> */}
+      </div>
     </div>
   );
 }

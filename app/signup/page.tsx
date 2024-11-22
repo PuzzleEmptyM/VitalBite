@@ -38,12 +38,15 @@ export default function SignUpPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <img src="/images/vb_logo.png" alt="VB Logo" className="w-20 h-20" />
+      {/* Header Section */}
+      <header className="absolute top-0 left-0 p-4">
+        <img src="images/vb_logo.png" alt="VB Logo" className="w-20 h-20" />
+      </header>
 
       <div className="w-11/12 max-w-md p-8 bg-white">
         <div className="flex flex-col items-center">
           {/* Welcome Text */}
-          <h1 className="mt-4 text-4xl font-bold text-teal font-playfair text-justify pb-4">
+          <h1 className="mt-4 text-4xl font-bold text-teal font-playfair text-justify pb-4 pt-12">
             Welcome to <br /> <span className="text-justify pt-2 pl-6"> VitalBite </span>
           </h1>
 
