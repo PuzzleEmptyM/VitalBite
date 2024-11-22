@@ -41,7 +41,7 @@ export default function IngredientsAnalyzerPage() {
 
         {/* Results Section */}
         <div className="px-8 pt-7">
-          <div className="w-full h-full max-w-md p-6 bg-mint rounded-2xl border border-forest_green shadow-lg focus:outline-none focus:ring focus:ring-forest_green">
+          <div className="w-full h-full max-w-md p-6 bg-mint rounded-2xl border border-forest_green shadow-lg focus:outline-none focus:ring focus:ring-forest_green mb-12">
             <h2 className="text-xl font-light text-forest_green font-playfair mb-4 text-left">
               Tomatoes work with the following diets:
             </h2>
@@ -75,10 +75,12 @@ export default function IngredientsAnalyzerPage() {
           </div>
         </div>
       </main>
-      <div>
+      {/* <div>
         <DisclaimerFooter />
+      </div> */}
+      <div className="mb-12">
+        <FooterNavigation />
       </div>
-      <FooterNavigation />
     </div>
   );
 }
