@@ -1,6 +1,21 @@
+"use client";
+
 import React from "react";
+import { useSession, signIn } from "next-auth/react";
 
 const Page = () => {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  // If unauthenticated, redirect to sign in
+  if (status === "unauthenticated") {
+    signIn(); // Redirects to sign-in page
+    return null; // Render nothing until redirection
+  }
+
   return (
     <div className="bg-white min-h-screen p-4 font-sans">
       {/* Header */}
