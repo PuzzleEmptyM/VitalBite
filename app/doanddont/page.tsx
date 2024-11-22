@@ -2,7 +2,6 @@
 
 import Head from "next/head";
 import Header from "@/components/Header";
-import DisclaimerFooter from "@/components/DisclaimerFooter";
 import DoAndDont from "@/components/DoAndDont";
 import FooterNavigation from "@/components/FooterNavigation";
 import Image from "next/image";
@@ -20,10 +19,10 @@ export default function DoAndDontPage() {
           src="/images/avocado.png"
           alt="avocado image"
           className="w-60 h-60 mb-0"
+          style={{ marginTop: '-15px' }} 
         />
         <DoAndDont />
       </main>
-      {/* <DisclaimerFooter /> */}
       <FooterNavigation />
     </div>
   );
