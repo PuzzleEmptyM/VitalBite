@@ -1,6 +1,7 @@
 "use client"
 
 import DisclaimerFooter from "@/components/DisclaimerFooter";
+import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
 import Head from "next/head";
 import Image from "next/image";
@@ -77,6 +78,7 @@ export default function IngredientsAnalyzerPage() {
       <div>
         <DisclaimerFooter />
       </div>
+      <FooterNavigation />
     </div>
   );
 }
