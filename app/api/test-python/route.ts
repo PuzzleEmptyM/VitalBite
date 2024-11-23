@@ -9,7 +9,18 @@ async function runPythonScript(uid: string) {
     const scriptPath = path.join(process.cwd(), "app", "scripts", "hello.py");
 
     // Spawn a new process to run the Python script and pass the uid as an argument
-    const python = spawn("python3", [scriptPath, uid]);
+    const python = spawn("python3", [scriptPath, uid], {
+      env: {
+        POSTGRES_USER: process.env.POSTGRES_USER,
+        POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
+        POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
+        POSTGRES_HOST: process.env.POSTGRES_HOST,
+        ...process.env, // Include all other environment variables
+      },
+    });
+
+    console.log("Environment Variables:", process.env);
+    
 
     let data = "";
     let errorData = "";
@@ -21,6 +32,7 @@ async function runPythonScript(uid: string) {
 
     // Capture any error messages from the Python script
     python.stderr.on("data", (chunk) => {
+      console.error(chunk.toString());
       errorData += chunk;
     });
 
