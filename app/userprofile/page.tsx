@@ -20,14 +20,14 @@ export default function UserProfilePage() {
                 src="/images/jalapeno.png"
                 alt="jalapeno image"
                 className="w-60 h-60"
-                style={{ marginTop: '-15px',
-                marginBottom: '-35px',
+                style={{ marginTop: '-45px',
+                marginBottom: '-25px',
                  }} 
                 />
-                <h1 className="text-2xl font-semibold text-forest_green font-playfair mb-6">Tiffany's Profile</h1>
+                <h1 className="text-2xl font-semibold text-forest_green font-playfair mb-2">Tiffany's Profile</h1>
             
                 {/* Saved Recipes */}
-                <div className="w-full max-w-md bg-mint rounded-3xl border border-forest_green focus:outline focus:ring focus:ring-forest_green flex items-center justify-center p-2 mb-4 shadow-xl">
+                <div className="w-full max-w-md bg-mint rounded-3xl border border-forest_green focus:outline focus:ring focus:ring-forest_green flex items-center justify-center p-2 mb-6 shadow-xl">
                     <div className="flex flex-col items-center">
                     <img
                         src="/images/saladbowl.png"
