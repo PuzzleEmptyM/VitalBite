@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export default function IngredientsAnalyzerPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white px-6">
+    <div className="flex flex-col min-h-screen px-6">
       <Head>
         <title>Ingredient Analyzer</title>
       </Head>

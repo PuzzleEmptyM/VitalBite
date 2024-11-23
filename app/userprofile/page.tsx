@@ -14,40 +14,58 @@ export default function UserProfilePage() {
         {/* Header Section */}
         <Header />
     
-          {/* Illustration */}
-          <div className="w-24 h-24 mb-4">
-            <img
-              src="/images/jalapeno.png"
-              alt="Jalapeno"
-              className="object-contain"
-            />
-          </div>
-          <h1 className="text-xl font-semibold mb-6">Tiffany's Profile</h1>
-    
-          {/* Saved Recipes */}
-          <div className="w-full max-w-md bg-mint text-lightMint rounded-lg flex items-center justify-center p-6 mb-4 shadow-lg">
-            <div className="flex flex-col items-center">
-              <img
-                src="/images/saladbowl.png"
-                alt="Salad Icon"
-                className="w-12 h-12 mb-2"
-              />
-              <p className="text-lg font-medium">Saved Recipes</p>
-            </div>
-          </div>
-    
-          {/* Saved Lifestyle Tips */}
-          <div className="w-full max-w-md bg-mint text-lightMint rounded-lg flex items-center justify-center p-6 shadow-lg">
-            <div className="flex flex-col items-center">
-              <img
-                src="/images/leaf.png"
-                alt="Leaf Icon"
-                className="w-12 h-12 mb-2"
-              />
-              <p className="text-lg font-medium">Saved Lifestyle Tips</p>
-            </div>
-          </div>
-    
+          {/* Main content */}
+            <main className="flex-grow flex flex-col items-center">
+                <img
+                src="/images/jalapeno.png"
+                alt="jalapeno image"
+                className="w-60 h-60"
+                style={{ marginTop: '-15px',
+                marginBottom: '-35px',
+                 }} 
+                />
+                <h1 className="text-2xl font-semibold text-forest_green font-playfair mb-6">Tiffany's Profile</h1>
+            
+                {/* Saved Recipes */}
+                <div className="w-full max-w-md bg-mint rounded-3xl border border-forest_green focus:outline focus:ring focus:ring-forest_green flex items-center justify-center p-2 mb-4 shadow-xl">
+                    <div className="flex flex-col items-center">
+                    <img
+                        src="/images/saladbowl.png"
+                        alt="salad bowl image"
+                        className="w-40 h-40"
+                        onClick={() => alert('Saved Recipes selected')}
+                        style={{ marginTop: '-15px' }} 
+                        />
+                    <p className="text-lg font-medium text-forest_green font-playfair "
+                        style={{ 
+                            marginTop: '-15px',
+                            marginBottom: '6px',
+                        }}>
+                            Saved Recipes
+                    </p>
+                    </div>
+                </div>
+            
+                {/* Saved Lifestyle Tips */}
+                <div className="w-full max-w-md bg-mint rounded-3xl border border-forest_green focus:outline focus:ring focus:ring-forest_green flex items-center justify-center p-6 shadow-xl">
+                    <div className="flex flex-col items-center">
+                    <img
+                        src="/images/leaf.png"
+                        alt="salad bowl image"
+                        className="w-40 h-40"
+                        onClick={() => alert('Saved Lifestyle Tips selected')}
+                        style={{ marginTop: '-15px' }} 
+                        />
+                    <p className="text-lg text-forest_green font-playfair font-medium"
+                        style={{ 
+                            marginTop: '-15px',
+                            marginBottom: '2px',
+                        }}>
+                            Saved Lifestyle Tips
+                    </p>
+                    </div>
+                </div>
+          </main>
           {/* Bottom Navigation */}
           <FooterNavigation />
         </div>
