@@ -3,7 +3,7 @@ export default function Header() {
     return (
       <>
         {/* Header */}
-        <header className="flex items-center justify-between mb-6">
+        <header className="flex items-center justify-between mb-6 pr-4">
           <div
             onClick={() => alert("Home!")}
             className="cursor-pointer"
