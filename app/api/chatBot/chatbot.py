@@ -2,12 +2,19 @@
 import openai
 import json
 import pg8000
-from dotenv import load_dotenv
+from dotenv import load_dotenv # local testing
 import os
+import sys
 
+
+#  # Read JSON input from stdin
+# input_data = sys.stdin.read()
+# data = json.loads(input_data)
+# uid = data.get("uid")
+# message = data.get("message")
 
 # Load environment variables
-load_dotenv(dotenv_path="./.env")
+load_dotenv(dotenv_path="./.env") # local testing
 
 # OpenAI API Key
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -538,6 +545,7 @@ if __name__=="__main__":
     # Connect to OpenAI
     client = openai.OpenAI()
 
+    # Replace with uid
     userId = 1
 
     try:
@@ -545,6 +553,7 @@ if __name__=="__main__":
         context = get_conversation_context(userId, cursor)
         recipes = get_user_recipes(userId, cursor)
 
+        # Replace with message
         user_message = "Can you give me an example of communicating cleary to a waiter?"
 
         classify = classify_message(user_message, user_diet, context, client)

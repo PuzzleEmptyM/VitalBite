@@ -3,19 +3,28 @@ import json
 import openai
 import pg8000
 import os
+# from dotenv import load_dotenv # local testing
 
-# Get the UID passed as an argument
-uid = sys.argv[1]
+# # Get the UID passed as an argument
+# uid = sys.argv[1]
 
 if __name__ == "__main__":
-    load_dotenv(dotenv_path="./.env")
-
-    DATABASE_USER = os.getenv("POSTGRES_USER")
-    DATABASE_PASS = os.getenv("POSTGRES_PASSWORD")
-    DATABASE_DB = os.getenv("POSTGRES_DATABASE")
-    DATABASE_HOST = os.getenv("POSTGRES_HOST")
-
+        
     try:
+
+        # Read JSON input from stdin
+        input_data = sys.stdin.read()
+        data = json.loads(input_data)
+        uid = data.get("uid")
+        message = data.get("message")
+
+        # load_dotenv() # local testing
+
+        DATABASE_USER = os.getenv("POSTGRES_USER")
+        DATABASE_PASS = os.getenv("POSTGRES_PASSWORD")
+        DATABASE_DB = os.getenv("POSTGRES_DATABASE")
+        DATABASE_HOST = os.getenv("POSTGRES_HOST")
+
         conn = pg8000.connect(
         user=DATABASE_USER,
         password=DATABASE_PASS,
@@ -36,6 +45,8 @@ if __name__ == "__main__":
         response = {
             "uid": uid,
             "message": f"Hello from Python, user {rows}",
+            "user": f"\nDB User ID: {DATABASE_USER}\n",
+            "user_message": f"Test User message: {message}",
             "status": "success"
         }
 
