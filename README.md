@@ -123,3 +123,139 @@ GET /api/diets
   "error": "Failed to fetch diet types"
 }
 ```
+
+#### Fetch Diet Type by dietId
+
+**Endpoint:** `/api/diets?dietId=<dietId>`
+
+**Method:** `GET`
+
+**Description:** Fetches details of a diet type based on the given dietId.
+
+
+##### Request Parameters
+
+| Parameter | Type   | Description              | Required |
+|-----------|--------|--------------------------|----------|
+| `dietID`  | `int`  | The ID of the diet.      | Yes      |
+
+##### Example Request
+
+```bash
+GET /api/diets?dietId=1
+```
+
+##### Example Response (Success)
+
+```json
+{
+  "dietId": 1,
+  "name": "Low FODMAP",
+  "description": "A diet low in fermentable oligosaccharides, disaccharides, monosaccharides, and polyols."
+}
+```
+
+##### Example Response (Diet Type Not Found)
+
+```json
+{
+  "message": "Diet type not found"
+}
+```
+
+##### Example Response (Error)
+
+```json
+{
+  "error": "Failed to fetch diet type"
+}
+```
+
+#### Fetch Diet IDs by UID
+
+**Endpoint:** `/api/diets?uid=<uid>`
+
+**Method:** `GET`
+
+**Description:** Fetches all dietIds associated with a specific user.
+
+##### Request Parameters
+
+| Parameter | Type   | Description              | Required |
+|-----------|--------|--------------------------|----------|
+|   `uid`   | `int`  | The unique user ID.      | Yes      |
+
+##### Example Request
+
+```bash
+GET /api/diets?uid=1
+```
+
+##### Example Response (Success)
+
+```json
+[1, 5]
+```
+
+##### Example Response (No Diet IDs Found)
+
+```json
+{
+  "message": "No dietIds found"
+}
+```
+
+##### Example Response (Error)
+
+```json
+{
+  "error": "Failed to fetch dietIds"
+}
+```
+
+### Preferences Routes
+
+#### Fetch Diet IDs by UID
+
+**Endpoint:** `/api/preferences`
+
+**Method:** `GET`
+
+**Description:** Fetches all diet IDs from user preferences for a specific user (uid).
+
+##### Request Parameters
+
+| Parameter | Type   | Description              | Required |
+|-----------|--------|--------------------------|----------|
+|   `uid`   | `int`  | The unique user ID.      | Yes      |
+
+##### Example Request
+
+```bash
+GET /api/preferences?uid=1
+```
+
+##### Example Response (Success)
+
+```json
+[
+  { "dietId": 1 },
+  { "dietId": 5 }
+]
+```
+
+##### Example Response (No Preferences Found)
+
+```json
+{
+  "message": "No preferences found"
+}
+```
+
+##### Example Response (Error)
+
+```json
+{
+  "error": "Failed to fetch preferences"
+}
+```
