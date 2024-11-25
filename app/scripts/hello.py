@@ -1,12 +1,10 @@
 import sys
 import json
-import openai
-import pg8000
+# import openai
+# import pg8000
 import os
 # from dotenv import load_dotenv # local testing
 
-# # Get the UID passed as an argument
-# uid = sys.argv[1]
 
 if __name__ == "__main__":
 
@@ -25,13 +23,19 @@ if __name__ == "__main__":
         message = data.get("message")
 
         # Simulate environment variable access
-        DATABASE_USER = os.getenv("POSTGRES_USER", "default_user")
-        print(f"Debug: DATABASE_USER: {DATABASE_USER}", file=sys.stderr, flush=True)
+        # DATABASE_USER = os.getenv("POSTGRES_USER", "default_user")
+        # print(f"Debug: DATABASE_USER: {DATABASE_USER}", file=sys.stderr, flush=True)
 
         # Create JSON response
+        # response = {
+        #     "uid": uid,
+        #     "user": f"DB User ID: {DATABASE_USER}",
+        #     "user_message": f"Test User message: {message}",
+        #     "status": "success"
+        # }
+
         response = {
             "uid": uid,
-            "user": f"DB User ID: {DATABASE_USER}",
             "user_message": f"Test User message: {message}",
             "status": "success"
         }

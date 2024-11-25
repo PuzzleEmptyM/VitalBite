@@ -16,6 +16,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: "openid profile email https://www.googleapis.com/auth/userinfo.profile",
+        },
+      },
+      checks: [], // remove PKCE
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -30,7 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // Find user by email
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: credentials.email as string },
         });
 
         if (!user || !user.password) {
@@ -38,7 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         // Compare the password with the hashed password in the database
-        const isValidPassword = await compare(credentials.password, user.password);
+        const isValidPassword = await compare(credentials.password as string, user.password);
         if (!isValidPassword) {
           throw new Error("Incorrect password");
         }
@@ -52,24 +58,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   pages: {
-    signIn: '/login', // Optional: Customize the sign-in page
+    signIn: '/login',
   },
   callbacks: {
     async session({ session, token }) {
       // Make sure to include all necessary fields in the session
       if (token) {
-        session.user.id = token.sub; // Add user ID from token to session
-        session.user.email = token.email; // Add email from token to session
-        session.user.name = token.name; // Add username to session
+        session.user.id = token.sub ?? "";
+        session.user.email = token.email ?? "";
+        session.user.name = token.name ?? "";
       }
       return session;
-    },
+    },    
     async jwt({ token, user }) {
       // If user is logged in, attach their information to the token
       if (user) {
-        token.sub = user.id;
-        token.email = user.email;
-        token.name = user.name;
+        token.sub = user.id ?? "";
+        token.email = user.email ?? "";
+        token.name = user.name ?? "";
       }
       return token;
     },
