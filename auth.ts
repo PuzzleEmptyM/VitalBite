@@ -21,7 +21,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           scope: "openid profile email https://www.googleapis.com/auth/userinfo.profile",
         },
       },
-      checks: ["pkce"], // Make sure PKCE is explicitly enabled
+      checks: [], // remove PKCE
     }),
     CredentialsProvider({
       name: "Credentials",
