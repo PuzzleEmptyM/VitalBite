@@ -16,6 +16,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: "openid profile email https://www.googleapis.com/auth/userinfo.profile",
+        },
+      },
     }),
     CredentialsProvider({
       name: "Credentials",

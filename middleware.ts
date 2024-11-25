@@ -10,11 +10,7 @@ export async function middleware(req: NextRequest) {
   const publicPaths = [
     "/login",
     "/signup",
-    "/api/auth/signin",
-    "/api/auth/callback",
-    "/api/auth/session",
-    "/api/auth/error",
-    "/api/auth/providers",
+    "/api/auth",
   ];
 
   const { pathname } = req.nextUrl;
