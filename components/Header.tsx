@@ -3,7 +3,7 @@ export default function Header() {
     return (
       <>
         {/* Header */}
-        <header className="flex items-center justify-between mb-6">
+        <header className="flex items-center justify-between mb-6 pr-4">
           <div
             onClick={() => alert("Home!")}
             className="cursor-pointer"
@@ -12,7 +12,7 @@ export default function Header() {
           </div>
 
           {/* user badge */}
-          <div className="flex items-center space-x-4 pr-4">
+          <div className="flex items-center space-x-4">
             <div className="w-10 h-10 bg-mint text-forest_green font-bold font-playfair rounded-full flex items-center justify-center border-2 border-forest_green shadow-md"
               onClick={() => alert("User profile!")}
             >
