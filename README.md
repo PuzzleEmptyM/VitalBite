@@ -73,9 +73,11 @@ GET /api/context?uid=1
 {
   "message": "No chats found for the specified UID"
 }
-Example Response (Error)
-json
-Copy code
+```
+
+##### Example Response (Error)
+
+```json
 {
   "error": "Failed to fetch chat context"
 }
@@ -112,9 +114,11 @@ GET /api/diets
 {
   "message": "No diet types found"
 }
-Example Response (Error)
-json
-Copy code
+```
+
+##### Example Response (Error)
+
+```json
 {
   "error": "Failed to fetch diet types"
 }
