@@ -1,7 +1,7 @@
 const { spawn } = require("child_process");
 
 const uid = 1; // Example static UID
-const message = "Can you give me an example of communicating clearly to a waiter?";
+const message = "Please give me a recipe for something with shrimp";
 
 // JSON input for the Python script
 const input = JSON.stringify({uid, message});
