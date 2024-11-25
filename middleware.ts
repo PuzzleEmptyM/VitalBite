@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
 
   // Allow access if the request is for authentication routes or if there is a valid token
   if (
-    pathname.startsWith("/api/auth") || // Allow all authentication routes
+    pathname.startsWith("/api/auth") ||
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
     token
