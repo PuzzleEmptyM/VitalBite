@@ -1,13 +1,15 @@
 const { spawn } = require("child_process");
 
-const uid = 12345; // Example static UID
+const uid = 1; // Example static UID
 const message = "Can you give me an example of communicating clearly to a waiter?";
 
 // JSON input for the Python script
-const input = JSON.stringify({ uid, message });
+const input = JSON.stringify({uid, message});
 
 // Spawn the Python process
-const pythonProcess = spawn("python3", ["../../scripts/hello.py"]);
+const pythonProcess = spawn("python3", ["../chatBot/chatbot.py"], {
+    env: { ...process.env } // Pass existing Node.js environment to Python
+});
 
 // Send input to the Python script
 pythonProcess.stdin.write(input);
