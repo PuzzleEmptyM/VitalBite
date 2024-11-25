@@ -52,7 +52,7 @@ export default function UserProfilePage() {
         {/* Saved Recipes */}
         <div
           className="w-full max-w-md bg-mint rounded-3xl border border-forest_green focus:outline focus:ring focus:ring-forest_green flex items-center justify-center p-2 mb-6 shadow-xl"
-          onClick={() => router.push("/saved-recipes")} // Corrected the router import
+          onClick={() => router.push("/savedrecipes")}
         >
           <div className="flex flex-col items-center">
             <img
@@ -76,7 +76,7 @@ export default function UserProfilePage() {
         {/* Saved Lifestyle Tips */}
         <div
           className="w-full max-w-md bg-mint rounded-3xl border border-forest_green focus:outline focus:ring focus:ring-forest_green flex items-center justify-center p-6 shadow-xl"
-          onClick={() => router.push("/saved-lifestyle-tips")} // Corrected the router import
+          onClick={() => router.push("/lifestyletips")}
         >
           <div className="flex flex-col items-center">
             <img
