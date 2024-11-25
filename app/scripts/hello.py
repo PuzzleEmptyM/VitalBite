@@ -3,7 +3,7 @@ import json
 import openai
 import pg8000
 import os
-from dotenv import load_dotenv # local testing
+# from dotenv import load_dotenv # local testing
 
 # # Get the UID passed as an argument
 # uid = sys.argv[1]
@@ -11,7 +11,7 @@ from dotenv import load_dotenv # local testing
 if __name__ == "__main__":
 
     try:
-        load_dotenv() # local testing
+        # load_dotenv() # local testing
 
         # Debug: Log that the script has started (to stderr)
         print("Debug: Script started", file=sys.stderr, flush=True)
