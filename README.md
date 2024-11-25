@@ -12,7 +12,7 @@ This is the starter template for the Atlas Cinema Guru project. It contains the 
 
 ## API Routes Documentation
 
-## Table of Contents
+### Table of Contents
 
 1. [Context Routes](#context-routes)
 2. [Diets Routes](#diets-routes)
@@ -20,9 +20,9 @@ This is the starter template for the Atlas Cinema Guru project. It contains the 
 
 ---
 
-## Context Routes
+### Context Routes
 
-### Fetch Chat Context by UID
+#### Fetch Chat Context by UID
 
 **Endpoint**: `/api/context`
 
@@ -30,13 +30,13 @@ This is the starter template for the Atlas Cinema Guru project. It contains the 
 
 **Description**: Fetches all chat data for a specific user identified by `uid`.
 
-#### Request Parameters
+##### Request Parameters
 
 | Parameter | Type   | Description              | Required |
 |-----------|--------|--------------------------|----------|
 | `uid`     | `int`  | The unique user ID.      | Yes      |
 
-#### Example Request
+##### Example Request
 
 ```bash
 GET /api/context?uid=1
