@@ -139,6 +139,11 @@ export const POST = async (req) => {
     return NextResponse.json(jsonResponse);
   } catch (error) {
     console.error("Error executing Python script:", error);
-    return NextResponse.json({ error: "Failed to execute Python script" }, { status: 500 });
+    // Include the error message in the response for debugging
+    return NextResponse.json({ 
+      error: "Failed to execute Python script", 
+      details: error.toString() 
+    }, { status: 500 });
   }
 };
+
