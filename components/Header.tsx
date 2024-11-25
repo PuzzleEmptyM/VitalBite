@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const Header: React.FC = () => {
@@ -45,7 +45,7 @@ const Header: React.FC = () => {
         </div>
         <button
           className="bg-mint text-forest_green px-4 py-2 font-bold font-playfair rounded-full shadow-md border-2 border-forest_green"
-          onClick={() => alert("Logout!")} // This can later be replaced with a logout function
+          onClick={() => signOut()} // Use NextAuth's signOut function to log out the user
         >
           Logout
         </button>
