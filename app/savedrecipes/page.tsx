@@ -9,26 +9,29 @@ import { useEffect, useState } from "react";
 const RecipePage: React.FC = () => {
   const { data: session } = useSession(); // Get session data
   const [recipes, setRecipes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true); // Adding loading state for better UX
 
   useEffect(() => {
     const fetchRecipes = async () => {
       if (session?.user?.id) {
         try {
+          setLoading(true); // Start loading when fetching
           const response = await fetch(`/api/recipes?uid=${session.user.id}`);
           const data = await response.json();
-          if (data && data.length > 0) {
-            setRecipes(data);
-          } else {
-            console.log("No recipes found for the logged-in user.");
-          }
+          setRecipes(data); // Set recipes directly, no need for sorting here
         } catch (error) {
           console.error("Error fetching recipes:", error);
+        } finally {
+          setLoading(false); // Stop loading
         }
       }
     };
 
-    fetchRecipes();
-  }, [session?.user?.id]); // Re-fetch when the session changes
+    if (session?.user?.id) fetchRecipes();
+  }, [session?.user?.id]); // Only refetch when the session id changes
+
+  // Sort recipes after they've been fetched
+  const sortedRecipes = [...recipes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
   return (
     <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
@@ -41,10 +44,13 @@ const RecipePage: React.FC = () => {
           style={{ marginTop: '-45px', marginBottom: '-15px', alignItems: 'center' }} 
         />
         <h1 className="text-xl font-bold text-center text-forest_green mb-2 font-playfair">Saved Recipes</h1>
-        {recipes.length === 0 ? (
+
+        {loading ? (
+          <p>Loading...</p> // Display loading state
+        ) : recipes.length === 0 ? (
           <p>No recipes saved yet. Start adding some!</p>
         ) : (
-          recipes.map((recipe, index) => (
+          sortedRecipes.map((recipe, index) => (
             <RecipeCard key={index} {...recipe} />
           ))
         )}
