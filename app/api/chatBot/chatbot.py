@@ -2,19 +2,21 @@
 import openai
 import json
 import pg8000
-# from dotenv import load_dotenv # local testing
 import os
 import sys
 
+# # FOR LOCAL TESTING ONLY
+# # ------------------------------------------------
+# from dotenv import load_dotenv # local testing
+# # Load environment variables
+# load_dotenv(dotenv_path="./.env") # local testing
+# # ------------------------------------------------
 
- # Read JSON input from stdin
+# Read JSON input from stdin
 input_data = sys.stdin.read()
 data = json.loads(input_data)
 uid = data.get("uid")
 message = data.get("message")
-
-# Load environment variables
-# load_dotenv(dotenv_path="./.env") # local testing
 
 # OpenAI API Key
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -96,7 +98,7 @@ def get_conversation_context(uid, cursor):
             messages.append({"role": "assistant", "content": chat_resp})
         return messages
     except Exception as e:
-        print(f"Database error: {e}")
+        print(f"Database error: {e}", file=sys.stderr)
         return []
     
 
@@ -123,7 +125,7 @@ def get_user_recipes(uid, cursor):
         recipe_names = [recipe[0] for recipe in recipes]
         return recipe_names
     except Exception as e:
-        print(f"Database error: {e}")
+        print(f"Database error: {e}", file=sys.stderr)
         return []
 
 
@@ -155,7 +157,7 @@ def classify_message(user_question, user_diet, context, client):
         classification = completion.choices[0].message.content.strip().lower()
         return classification
     except Exception as e:
-        print(f"Classification error: {e}")
+        print(f"Classification error: {e}", file=sys.stderr)
         return None
     
 
@@ -194,7 +196,7 @@ def store_context(userId, user_question, chat_response, classify, class_ID, conn
         conn.commit()
         return None
     except Exception as e:
-        print(f"Database error: {e}")
+        print(f"Database error: {e}", file=sys.stderr)
 
 
 # Store and Create New Recipes
@@ -227,11 +229,10 @@ def store_recipe(userId, recipe, conn):
         cursor.execute(query, (userId, name, ingreds, instruct, prep_time))
 
         recipe_id = cursor.fetchone()[0]
-        print(recipe_id)
         conn.commit()
         return recipe_id
     except Exception as e:
-        print(f"Database error: {e}")
+        print(f"Database error: {e}", file=sys.stderr)
         return None
 
 
@@ -306,7 +307,6 @@ def generate_recipe(user_message, user_diet, previous_recipes, client, userId, c
     )
 
     # Print the response
-    print(response.choices[0].message.content)
     recipe = json.loads(response.choices[0].message.content)
     class_ID = store_recipe(userId, recipe, conn)
 
@@ -348,11 +348,10 @@ def store_lifestyle_tip(userId, tip, conn):
         cursor.execute(query, (userId, summary, full_tip))
 
         tip_id = cursor.fetchone()[0]
-        print(tip_id)
         conn.commit()
         return tip_id
     except Exception as e:
-        print(f"Database error: {e}")
+        print(f"Database error: {e}", file=sys.stderr)
         return None
 
 def generate_lifestyle_tip(user_message, user_diet, context, client, userId, conn):
@@ -412,7 +411,6 @@ def generate_lifestyle_tip(user_message, user_diet, context, client, userId, con
     )
 
     # Print the response
-    print(response.choices[0].message.content)
     tip = json.loads(response.choices[0].message.content)
     class_ID = store_lifestyle_tip(userId, tip, conn)
 
@@ -481,7 +479,6 @@ def generate_general(user_message, user_diet, context, client, userId, conn):
     )
 
     # Print the response
-    print(response.choices[0].message.content)
     general_tip = json.loads(response.choices[0].message.content)
 
     classify = "none"
@@ -539,36 +536,35 @@ def generate_response(classification, userId, user_message, user_diet, context, 
 
 if __name__=="__main__":
     # Connect to Database
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Connect to OpenAI
-    client = openai.OpenAI()
-
-    # Replace with userId = uid
-    userId = uid
-
     try:
+
+        # Connect to OpenAI
+        client = openai.OpenAI()
+
+        # Replace with userId = uid
+        userId = uid
+
         user_diet = get_user_diet(userId, cursor)
         context = get_conversation_context(userId, cursor)
         recipes = get_user_recipes(userId, cursor)
 
         # Replace with user_message = message
-        user_message = "Can you give me an example of communicating cleary to a waiter?"
+        user_message = message
 
         classify = classify_message(user_message, user_diet, context, client)
-        print(classify)
         response = generate_response(classify, userId, user_message, user_diet, context, recipes, client, conn)
-        # recipe = generate_recipe(user_message, user_diet, recipes, client, userId, conn)
-        print(response)
+        print(json.dumps(response), flush=True)
         
-        # print(response)
-        # print(user_diet)
-        # print(context)
-        # print(recipes)
 
     except Exception as e:
-        print("Exception:" + e)
-
+        error_response = {
+            "error": str(e),
+            "status": "error"
+        }
+        print(json.dumps(error_response), file=sys.stderr)
     finally:
         conn.close()
