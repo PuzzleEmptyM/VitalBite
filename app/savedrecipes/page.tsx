@@ -25,7 +25,7 @@ const RecipePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
       <Header />
-      <main className="flex-grow flex flex-col items-center">
+      <main className="flex-grow flex flex-col items-center mb-16">
       <img
             src="/images/fork.png"
             alt="Fork image"
