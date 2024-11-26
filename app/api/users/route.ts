@@ -87,6 +87,7 @@ export const GET = async (req: Request) => {
       return NextResponse.json(result.rows[0]);
     }
 
+
     // Fetch user by email or username
     if (email || username) {
       let query = `
