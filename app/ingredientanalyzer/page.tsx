@@ -17,7 +17,7 @@ export default function IngredientsAnalyzerPage() {
       <Header />
 
       {/* Main Content */}
-      <main className="flex flex-col items-center w-full mt-8 space-y-6">
+      <main className="flex flex-col items-center w-full mt-2 space-y-6">
         {/* Title Section */}
         <div className="text-center">
           <h1 className="text-4xl font-light text-forest_green font-playfair relative pt-9">

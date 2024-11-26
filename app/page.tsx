@@ -2,11 +2,13 @@
 
 import React from "react";
 import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
 
 const Page = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -47,7 +49,7 @@ const Page = () => {
             </p>
             <button
               className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
-              onClick={() => alert("Understand Condition!")}
+              onClick={() => router.push("/condition")}
             >
               Learn More
             </button>
@@ -69,7 +71,7 @@ const Page = () => {
         {/* First Card */}
         <div
           className="bg-mint rounded-lg p-4 flex flex-col items-center border-2 border-forest_green mt-8 shadow-lg"
-          onClick={() => alert("do and dont!")}
+          onClick={() => router.push("/doanddont")}
         >
           <img
             src="/images/avocado.png"
@@ -84,7 +86,7 @@ const Page = () => {
         {/* Second Card */}
         <div
           className="bg-mint rounded-lg p-4 flex flex-col items-center border-2 border-forest_green mt-8 shadow-lg"
-          onClick={() => alert("Healthy tips!")}
+          onClick={() => router.push("/healthytips")}
         >
           <img
             src="/images/heart.png"
@@ -99,7 +101,7 @@ const Page = () => {
         {/* Third Card */}
         <div
           className="bg-mint rounded-lg p-4 flex flex-col items-center col-span-2 border-2 border-forest_green mt-8 shadow-lg"
-          onClick={() => alert("Ingredient Analyzer!")}
+          onClick={() => router.push("/ingredientanalyzer")}
         >
           <img
             src="/images/spoon.png"
@@ -131,7 +133,7 @@ const Page = () => {
           </p>
           <button
             className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
-            onClick={() => alert("Chatbot!")}
+            onClick={() => router.push("/aichatbot")}
           >
             Try Now
           </button>
