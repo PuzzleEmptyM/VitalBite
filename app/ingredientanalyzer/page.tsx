@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export default function IngredientsAnalyzerPage() {
   return (
-    <div className="flex flex-col min-h-screen px-6">
+    <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
       <Head>
         <title>Ingredient Analyzer</title>
       </Head>
@@ -17,7 +17,7 @@ export default function IngredientsAnalyzerPage() {
       <Header />
 
       {/* Main Content */}
-      <main className="flex flex-col items-center w-full mt-8 space-y-6">
+      <main className="flex flex-col items-center w-full mt-2 space-y-6">
         {/* Title Section */}
         <div className="text-center">
           <h1 className="text-4xl font-light text-forest_green font-playfair relative pt-9">
