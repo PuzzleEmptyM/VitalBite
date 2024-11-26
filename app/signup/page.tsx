@@ -13,8 +13,10 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [selectedDiets, setSelectedDiets] = useState<number[]>([]);
   const router = useRouter();
 
+  // Handles the sign-up process
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -22,6 +24,7 @@ export default function SignUpPage() {
         email,
         password,
         username: fullName,
+        diets: selectedDiets, // Add selected diets to the request
       });
 
       if (response.status === 201) {
@@ -87,7 +90,7 @@ export default function SignUpPage() {
               Please select your <br /> medical condition(s)
             </h2>
           </div>
-          <ConditionSelector />
+          <ConditionSelector onSelectConditions={setSelectedDiets} /> {/* Pass correct prop name */}
 
           {/* Get Started Button */}
           <GetStartedButton text="Get Started" />
