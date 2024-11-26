@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions, User as NextAuthUser } from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
@@ -6,7 +6,7 @@ import { compare } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-export const authOptions: NextAuthOptions = {
+export const { handlers, signIn, signOut, auth } = NextAuth({
   theme: {
     brandColor: "#1ED2AF",
     logo: "/logo.png",
@@ -16,16 +16,22 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: "openid profile email https://www.googleapis.com/auth/userinfo.profile",
+        },
+      },
+      checks: [], // remove PKCE
     }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Please provide both email and password");
+          throw new Error("Missing email or password");
         }
 
         // Find user by email
@@ -34,66 +40,49 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user || !user.password) {
-          throw new Error("Invalid email or password");
+          throw new Error("No user found with this email");
         }
 
-        // Compare passwords
-        const isPasswordValid = await compare(credentials.password, user.password);
-        if (!isPasswordValid) {
-          throw new Error("Invalid email or password");
+        // Compare the password with the hashed password in the database
+        const isValidPassword = await compare(credentials.password as string, user.password);
+        if (!isValidPassword) {
+          throw new Error("Incorrect password");
         }
 
-        // Map Prisma user to NextAuth user type
-        const nextAuthUser: NextAuthUser = {
-          id: user.uid.toString(), // Convert uid to string, since NextAuth expects string ids
+        return {
+          id: user.uid.toString(),
           email: user.email,
           name: user.username,
         };
-
-        return nextAuthUser;
       },
     }),
   ],
   pages: {
-    signIn: "/login", // Optional: Customize the sign-in page
+    signIn: '/login',
   },
   callbacks: {
-    async session({ session, user }) {
-      if (session?.user) {
-        session.user.id = user.id as string;
+    async session({ session, token }) {
+      // Make sure to include all necessary fields in the session
+      if (token) {
+        session.user.id = token.sub ?? "";
+        session.user.email = token.email ?? "";
+        session.user.name = token.name ?? "";
       }
       return session;
-    },
-    async signIn({ user }) {
-      try {
-        // Add user to the database using Prisma for Google sign-ins
-        const existingUser = await prisma.user.findUnique({
-          where: { email: user.email as string },
-        });
-
-        if (!existingUser) {
-          await prisma.user.create({
-            data: {
-              email: user.email!,
-              username: user.name || user.email!.split("@")[0],
-              password: null, // No password for OAuth users
-            },
-          });
-          console.log(`User created: ${user.email}`);
-        } else {
-          console.log(`User already exists: ${user.email}`);
-        }
-        return true; // Allow sign-in
-      } catch (error) {
-        console.error("Error inserting user into database:", error);
-        return false; // Block sign-in if there's an error
+    },    
+    async jwt({ token, user }) {
+      // If user is logged in, attach their information to the token
+      if (user) {
+        token.sub = user.id ?? "";
+        token.email = user.email ?? "";
+        token.name = user.name ?? "";
       }
+      return token;
     },
     async redirect({ url, baseUrl }) {
       return baseUrl;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-};
-
-export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);
+  debug: true,
+});

@@ -2,13 +2,13 @@ const DoAndDont: React.FC = () => {
   const items = ["Item 1", "Item 2", "Item 3", "Item 4"];
 
   return (
-    <section className="px-4">
-      <div className="relative mb-12">
+    <section className="px-4 mb-10">
+      <div className="relative">
         <h1 className="text-center text-2xl font-semibold text-forest_green font-playfair">
           Do's and Don'ts
         </h1>
         {/* Horizontal Divider */}
-        <div className="w-44 h-[4px] rounded bg-forest_green mx-auto"></div>
+        <div className="w-44 h-[4px] rounded bg-forest_green mx-auto mb-4"></div>
       </div>
       {/* content section */}
       <div className="flex flex-col md:flex-row justify-center gap-4 sm:px-4 md:px-8 lg:px-12 mb-12">
