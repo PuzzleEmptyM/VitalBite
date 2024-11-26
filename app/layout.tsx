@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Props) {
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#1ED2AF" />
       </head>
-      <body className={`antialiased bg-[#00003c] text-white`}>
+      <body className={`antialiased bg-[#ffff] text-black`}>
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
