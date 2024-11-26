@@ -104,14 +104,16 @@ export const GET = async (req: Request) => {
   }
 };
 
+
 // --------------------------------------------
 // API ROUTE TO SIGN UP A NEW USER (POST REQUEST)
 // --------------------------------------------
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
-    const { email, password, username } = body;
+    const { email, password, username, diets } = body;
 
+    // Check if the required fields are provided
     if (!email || !password || !username) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
@@ -138,6 +140,20 @@ export const POST = async (req: Request) => {
       RETURNING "uid", "email", "username"
     `;
     const newUser = await runSQL(insertUserQuery, [email, username, hashedPassword]);
+    const userId = newUser.rows[0].uid;
+
+    // Insert user preferences (selected diets)
+    if (diets && Array.isArray(diets) && diets.length > 0) {
+      // Create an array of parameters for the diets and userId
+      const preferenceValues = diets.map((dietId, index) => `($1, $${index + 2})`).join(", ");
+      const insertPreferencesQuery = `
+        INSERT INTO "userpreference" ("uid", "dietId")
+        VALUES ${preferenceValues}
+      `;
+      const preferenceParams = [userId, ...diets];
+
+      await runSQL(insertPreferencesQuery, preferenceParams);
+    }
 
     return NextResponse.json(
       { message: "User created successfully", user: newUser.rows[0] },
