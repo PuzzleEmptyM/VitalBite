@@ -28,7 +28,7 @@ const Header: React.FC = () => {
   }`;
 
   return (
-    <header className="flex items-center justify-between mb-6">
+    <header className="flex items-center justify-between">
       {/* Home Button - Navigate to Home Page */}
       <div onClick={() => router.push("/")} className="cursor-pointer">
         <img src="/images/vb_logo.png" alt="Logo" className="w-20 h-20" />
