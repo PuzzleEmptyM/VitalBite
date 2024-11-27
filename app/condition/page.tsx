@@ -2,13 +2,66 @@
 
 import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 const ConditionPage = () => {
+    const { data: session } = useSession();
+    const [dietIds, setDietIds] = useState<number[]>([]);
+    const [conditions, setConditions] = useState<any[]>([]);
+
+    useEffect(() => {
+        // Step 1: Fetch the diet IDs associated with the logged-in user
+        const fetchDietIds = async () => {
+            if (session?.user?.id) {
+                try {
+                    const response = await fetch(`/api/diets?uid=${session.user.id}`);
+                    const data = await response.json();
+                    if (response.ok) {
+                        setDietIds(data);
+                    } else {
+                        console.error("No dietIds found for the user:", data.message);
+                    }
+                } catch (error) {
+                    console.error("Error fetching dietIds:", error);
+                }
+            }
+        };
+
+        fetchDietIds();
+    }, [session?.user?.id]);
+
+    useEffect(() => {
+        // Step 2: Fetch the condition information for each dietId
+        const fetchConditionInfo = async () => {
+            if (dietIds.length > 0) {
+                try {
+                    const fetchedConditions = await Promise.all(
+                        dietIds.map(async (dietId) => {
+                            const response = await fetch(`/api/condition?dietId=${dietId}`);
+                            if (response.ok) {
+                                return await response.json();
+                            } else {
+                                console.error(`Error fetching condition info for dietId ${dietId}`);
+                                return null;
+                            }
+                        })
+                    );
+                    setConditions(fetchedConditions.filter((condition) => condition !== null));
+                } catch (error) {
+                    console.error("Error fetching condition information:", error);
+                }
+            }
+        };
+
+        fetchConditionInfo();
+    }, [dietIds]);
+
     return (
         <div className="bg-white min-h-screen p-4 font-sans">
             {/* Header */}
             <Header />
+
             {/* Main Content */}
             <main className="flex flex-col items-center w-full mb-16">
                 {/* Icon */}
@@ -28,27 +81,32 @@ const ConditionPage = () => {
                 {/* Divider */}
                 <hr className="border-forest_green w-3/4 mb-4" />
 
-                {/* Info Box */}
-                <section className="bg-mint w-full max-w-md rounded-lg p-4 shadow-lg">
-                    <h3 className="text-lg font-semibold text-forest_green mb-2 text-center">
-                        Celiac Disease and Gluten-Free Diet
-                    </h3>
-                    <p className="text-forest_green text-sm leading-relaxed">
-                        Celiac disease is an autoimmune disorder where consuming gluten—
-                        found in wheat, barley, and rye—triggers an immune response that
-                        damages the small intestine lining. This damage interferes with
-                        nutrient absorption and can lead to a variety of digestive and
-                        systemic symptoms.
-                    </p>
-                    <p className="text-forest_green text-sm leading-relaxed mt-2">
-                        A gluten-free diet is the cornerstone of managing celiac disease. By
-                        eliminating all sources of gluten, the immune system is no longer
-                        triggered, allowing the intestinal lining to heal over time.
-                        Following a strict gluten-free diet helps prevent long-term
-                        complications, including malnutrition, bone density loss, and an
-                        increased risk of certain cancers.
-                    </p>
-                </section>
+                {/* Condition Info Sections */}
+                {conditions.length === 0 ? (
+                    <p>No information available. Please select your dietary preferences.</p>
+                ) : (
+                    conditions.map((condition, index) => (
+                        <section
+                            key={index}
+                            className="bg-mint w-full max-w-md rounded-lg p-4 shadow-lg mb-6"
+                        >
+                            {/* Header */}
+                            <h3 className="text-lg font-bold text-center text-forest_green mb-2">
+                                {condition.header}
+                            </h3>
+                            
+                            {/* Title */}
+                            <h4 className="text-lg font-semibold text-forest_green mb-2 text-center">
+                                {condition.condition_title}
+                            </h4>
+                            
+                            {/* Description */}
+                            <p className="text-forest_green text-sm leading-relaxed">
+                                {condition.condition_description}
+                            </p>
+                        </section>
+                    ))
+                )}
             </main>
 
             {/* Bottom Navigation */}

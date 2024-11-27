@@ -38,7 +38,7 @@ export default function UserProfilePage() {
       <Header />
 
       {/* Main content */}
-      <main className="flex-grow flex flex-col items-center">
+      <main className="flex-grow flex flex-col items-center mb-16">
         <img
           src="/images/jalapeno.png"
           alt="jalapeno image"
