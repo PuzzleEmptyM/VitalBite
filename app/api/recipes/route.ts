@@ -30,8 +30,6 @@ async function runSQL(query: string, params: any[] = []) {
 export const GET = async (req: Request) => {
   try {
     console.log("Fetching recipes by UID...");
-
-    // Extract search parameters from the URL
     const { searchParams } = new URL(req.url);
     const uid = searchParams.get("uid"); // Get the 'uid' from the query string
 
@@ -45,15 +43,7 @@ export const GET = async (req: Request) => {
 
     // SQL query to fetch recipes by UID
     const query = `
-      SELECT 
-        "recipeId", 
-        "uid", 
-        "recipeName", 
-        "ingredients", 
-        "instructions", 
-        "prepTime", 
-        "timestamp"
-      FROM "recipe"
+      SELECT * FROM "recipe"
       WHERE "uid" = $1
     `;
     const result = await runSQL(query, [uid]); // Execute the query with the provided UID
