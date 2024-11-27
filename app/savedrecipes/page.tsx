@@ -43,12 +43,16 @@ const RecipePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
       <Header />
-      <main className="flex-grow flex flex-col items-center">
-        <img
-          src="/images/fork.png"
-          alt="Fork image"
-          className="w-60 h-60"
-          style={{ marginTop: '-45px', marginBottom: '-15px', alignItems: 'center' }} 
+
+      <main className="flex-grow flex flex-col items-center mb-16">
+      <img
+            src="/images/fork.png"
+            alt="Fork image"
+            className="w-60 h-60"
+            style={{ marginTop: '-45px',
+            marginBottom: '-15px',
+            alignItems: 'center',
+            }} 
         />
         <h1 className="text-xl font-bold text-center text-forest_green mb-2 font-playfair">Saved Recipes</h1>
 
