@@ -76,10 +76,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.uid = user.id;  // Ensure `uid` is treated as a string (UUID)
         token.email = user.email;
         token.name = user.name;
+
+        // Check if user exists in database and use their existing uid
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+
+        if (existingUser) {
+          // Use the existing user's uid for consistency
+          token.uid = existingUser.uid;
+        } else {
+          // Create a new user if they don't exist, and store their UID in the token
+          const newUser = await prisma.user.create({
+            data: {
+              email: user.email,
+              username: user.name || "Unknown",
+            },
+          });
+          token.uid = newUser.uid; // Assign the new user's uid
+        }
       }
       return token;
     },
-  
+
     async session({ session, token }) {
       console.log("Session callback triggered");
       if (token?.uid) {
