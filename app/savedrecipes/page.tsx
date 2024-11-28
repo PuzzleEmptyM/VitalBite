@@ -18,9 +18,16 @@ const RecipePage: React.FC = () => {
           setLoading(true); // Start loading when fetching
           const response = await fetch(`/api/recipes?uid=${session.user.id}`);
           const data = await response.json();
-          setRecipes(data); // Set recipes directly, no need for sorting here
+
+          // Ensure data is an array before setting recipes
+          if (Array.isArray(data)) {
+            setRecipes(data); 
+          } else {
+            setRecipes([]); // Handle unexpected data format
+          }
         } catch (error) {
           console.error("Error fetching recipes:", error);
+          setRecipes([]); // Set empty array in case of an error
         } finally {
           setLoading(false); // Stop loading
         }
@@ -31,7 +38,7 @@ const RecipePage: React.FC = () => {
   }, [session?.user?.id]); // Only refetch when the session id changes
 
   // Sort recipes after they've been fetched
-  const sortedRecipes = [...recipes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  const sortedRecipes = recipes ? [...recipes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) : [];
 
   return (
     <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
@@ -51,7 +58,7 @@ const RecipePage: React.FC = () => {
 
         {loading ? (
           <p>Loading...</p> // Display loading state
-        ) : recipes.length === 0 ? (
+        ) : sortedRecipes.length === 0 ? (
           <p>No recipes saved yet. Start adding some!</p>
         ) : (
           sortedRecipes.map((recipe, index) => (
