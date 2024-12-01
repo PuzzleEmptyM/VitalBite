@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export default function DoAndDontPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
       <Head>
         <title>Do's and Don'ts | VitalBite</title>
         <meta name="description" content="A guide of do's and don'ts based on users diet needs." />

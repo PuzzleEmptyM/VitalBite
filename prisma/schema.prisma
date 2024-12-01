@@ -8,29 +8,24 @@ datasource db {
 }
 
 model User {
-  uid            Int              @id @default(autoincrement())
-  email          String           @unique
-  password       String?
-  username       String
-  context        context[]
-  recipe         recipe[]
-  tip            tip[]
-  userpreference userpreference[]
+  email    String  @unique
+  password String?
+  username String
+  uid      String? @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
 
   @@map("users")
 }
 
 model context {
   chatId       Int      @id(map: "Context_pkey") @default(autoincrement())
-  uid          Int
   userQuestion String
   chatResponse String
   recipeId     Int?
   tipId        Int?
   timestamp    DateTime @default(now())
+  uid          String?  @db.Uuid
   recipe       recipe?  @relation(fields: [recipeId], references: [recipeId], map: "Context_recipeId_fkey")
   tip          tip?     @relation(fields: [tipId], references: [tipId], map: "Context_tipId_fkey")
-  users        User     @relation(fields: [uid], references: [uid], map: "Context_uid_fkey")
 }
 
 model diettype {
@@ -41,30 +36,27 @@ model diettype {
 
 model recipe {
   recipeId     Int       @id(map: "Recipe_pkey") @default(autoincrement())
-  uid          Int
   recipeName   String
   ingredients  Json      @db.Json
   instructions Json      @db.Json
   prepTime     Int?
   timestamp    DateTime  @default(now())
+  uid          String?   @db.Uuid
   context      context[]
-  users        User      @relation(fields: [uid], references: [uid], map: "Recipe_uid_fkey")
 }
 
 model tip {
   tipId     Int       @id(map: "Tip_pkey") @default(autoincrement())
-  uid       Int
   tip       String
   timestamp DateTime  @default(now())
   summary   String
+  uid       String?   @db.Uuid
   context   context[]
-  users     User      @relation(fields: [uid], references: [uid], map: "Tip_uid_fkey")
 }
 
 model userpreference {
   preferenceId Int      @id(map: "UserPreference_pkey") @default(autoincrement())
-  uid          Int
   dietId       Int
+  uid          String?  @db.Uuid
   diettype     diettype @relation(fields: [dietId], references: [dietId], onDelete: Cascade, map: "UserPreference_dietId_fkey")
-  users        User     @relation(fields: [uid], references: [uid], onDelete: Cascade, map: "UserPreference_uid_fkey")
 }
