@@ -14,15 +14,16 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { message }: { message: string } = body;
 
-    const { data: session } = useSession(); // Get session data
-    if (!session || !session.user || !session.user.id) {
-      return NextResponse.json(
-        { error: "User is not authenticated" },
-        { status: 401 }
-      );
-    }
+    // const { data: session } = useSession(); // Get session data
+    // if (!session || !session.user || !session.user.id) {
+    //   return NextResponse.json(
+    //     { error: "User is not authenticated" },
+    //     { status: 401 }
+    //   );
+    // }
 
-    const uid = session.user.id; // Extract the user's ID from the session
+    // const uid = session.user.id; // Extract the user's ID from the session
+    const uid = "2a28b491-44d5-40c5-a824-2d9469ddf9d9";
 
     const payload = { uid, message };
 
