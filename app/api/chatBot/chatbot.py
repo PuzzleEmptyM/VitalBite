@@ -4,19 +4,20 @@ import json
 import pg8000
 import os
 import sys
+import uuid
 
-# # FOR LOCAL TESTING ONLY
-# # ------------------------------------------------
-# from dotenv import load_dotenv # local testing
-# # Load environment variables
-# load_dotenv(dotenv_path="./.env") # local testing
-# # ------------------------------------------------
+# FOR LOCAL TESTING ONLY
+# ------------------------------------------------
+from dotenv import load_dotenv # local testing
+# Load environment variables
+load_dotenv(dotenv_path="./.env") # local testing
+# ------------------------------------------------
 
-# Read JSON input from stdin
-input_data = sys.stdin.read()
-data = json.loads(input_data)
-uid = data.get("uid")
-message = data.get("message")
+# # Read JSON input from stdin
+# input_data = sys.stdin.read()
+# data = json.loads(input_data)
+# uid = data.get("uid")
+# message = data.get("message")
 
 # OpenAI API Key
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -45,21 +46,25 @@ def get_user_diet(uid, cursor):
     """
     Retrieves the User Diet Restrictions
     
-    Inputs:\\
-    uid - user Id\\
+    Inputs:
+    uid - user ID (string or UUID object)
     cursor - database cursor object
 
-    Returns:\\
-    String of all assoicated dietary requirements
+    Returns:
+    String of all associated dietary requirements
     """
-
     try:
-        query = f"""
-                SELECT dt."dietName" FROM userpreference as up
-                JOIN diettype as dt ON up."dietId" = dt."dietId" 
-                WHERE up.uid = {uid} 
-                """
-        cursor.execute(query)
+        # Ensure the UID is a UUID object
+        if isinstance(uid, str):
+            uid = uuid.UUID(uid)
+
+        query = """
+            SELECT dt."dietName"
+            FROM userpreference as up
+            JOIN diettype as dt ON up."dietId" = dt."dietId" 
+            WHERE up.uid = %s;
+        """
+        cursor.execute(query, (str(uid),))  # Use parameterized queries
         diets = cursor.fetchall()
         diet_list = [diet[0] for diet in diets]
         return ', '.join(diet_list)
@@ -72,25 +77,30 @@ def get_conversation_context(uid, cursor):
     """ 
     Gets context to give to chatbot 
     
-    Inputs:\\
-    uid - user Id\\
+    Inputs:
+    uid - user Id (UUID as string or object)
     cursor - database cursor object
 
-    Returns:\\
+    Returns:
     List of 10 most previous questions and answers formatted to give
     chatbot correct context
     """
 
     try:
-        query = f"""
+        # Ensure the UID is a UUID object
+        if isinstance(uid, str):
+            uid = uuid.UUID(uid)
+
+        query = """
             SELECT "userQuestion", "chatResponse"
             FROM context
-            WHERE uid = {uid} AND "recipeId" IS NULL
+            WHERE uid = %s AND "recipeId" IS NULL
             ORDER BY timestamp DESC
             LIMIT 10;
         """
-        cursor.execute(query)
+        cursor.execute(query, (str(uid),))  # Parameterized query for safety
         context = cursor.fetchall()
+
         # Flatten the context into a list of messages
         messages = []
         for user_q, chat_resp in reversed(context):
@@ -98,7 +108,7 @@ def get_conversation_context(uid, cursor):
             messages.append({"role": "assistant", "content": chat_resp})
         return messages
     except Exception as e:
-        print(f"Database error: {e}", file=sys.stderr)
+        print(f"Database error in get_conversation_context: {e}")
         return []
     
 
@@ -106,26 +116,32 @@ def get_user_recipes(uid, cursor):
     """
     Retrieves the previous user recipes
     
-    Inputs:\\
-    uid - user Id\\
+    Inputs:
+    uid - user Id (UUID as string or object)
     cursor - database cursor object
 
-    Returns:\\
+    Returns:
     List of previous recipes names for context
     """
 
     try:
-        query = f"""
+        # Ensure the UID is a UUID object
+        if isinstance(uid, str):
+            uid = uuid.UUID(uid)
+
+        query = """
             SELECT "recipeName"
             FROM recipe
-            WHERE uid = {uid}; 
+            WHERE uid = %s;
         """
-        cursor.execute(query)
+        cursor.execute(query, (str(uid),))  # Parameterized query for safety
         recipes = cursor.fetchall()
+
+        # Extract recipe names
         recipe_names = [recipe[0] for recipe in recipes]
         return recipe_names
     except Exception as e:
-        print(f"Database error: {e}", file=sys.stderr)
+        print(f"Database error in get_user_recipes: {e}")
         return []
 
 
@@ -314,7 +330,7 @@ def generate_recipe(user_message, user_diet, previous_recipes, client, userId, c
     chat_response = recipe["Recipe"]
 
     store_context(userId, user_message, chat_response, classify, class_ID, conn)
-    response = {"uid": userId,
+    response = {"uid": str(userId),
                 "message": f"Recipe added to Recipe Book: {recipe['Recipe']}",
                 "status": "success"}
     return(response)
@@ -419,7 +435,7 @@ def generate_lifestyle_tip(user_message, user_diet, context, client, userId, con
     full_tip = tip["full_tip"]
 
     store_context(userId, user_message, chat_response, classify, class_ID, conn)
-    response = {"uid": userId,
+    response = {"uid": str(userId),
                 "message": f"{chat_response} \n\n {full_tip} \n\n Lifestyle tip added to Lifestyle Tips Cards",
                 "status": "success"}
     return(response)
@@ -486,7 +502,7 @@ def generate_general(user_message, user_diet, context, client, userId, conn):
     class_ID = None
 
     store_context(userId, user_message, chat_response, classify, class_ID, conn)
-    response = {"uid": userId,
+    response = {"uid": str(userId),
                 "message": f"{chat_response}",
                 "status": "success"}
     return(response)
@@ -511,7 +527,7 @@ def generate_response(classification, userId, user_message, user_diet, context, 
     """
 
     if classification == "not applicable":
-        response = {"uid": userId,
+        response = {"uid": str(userId),
                     "message": "I'm sorry, but I can only assist with dietary and lifestyle-related questions.",
                     "status": "success"}
 
@@ -528,7 +544,7 @@ def generate_response(classification, userId, user_message, user_diet, context, 
         response = generate_general(user_message, user_diet, context, client, userId, conn)
         return response
     else:
-        response = response = {"uid": userId,
+        response = response = {"uid": str(userId),
                 "message": "I'm sorry, I didn't understand your request.",
                 "status": "success"}
         return response
@@ -540,23 +556,31 @@ if __name__=="__main__":
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    try:
+    # Example UUID as a string
+    uid_str = "2a28b491-44d5-40c5-a824-2d9469ddf9d9"
 
+    # Convert to a UUID object
+    uid_obj = uuid.UUID(uid_str)
+
+    try:
+        
         # Connect to OpenAI
         client = openai.OpenAI()
 
         # Replace with userId = uid
-        userId = uid
+        userId = uid_obj
 
         user_diet = get_user_diet(userId, cursor)
         context = get_conversation_context(userId, cursor)
         recipes = get_user_recipes(userId, cursor)
 
         # Replace with user_message = message
-        user_message = message
+        user_message = "Hello world"
+        # user_message = message
 
         classify = classify_message(user_message, user_diet, context, client)
         response = generate_response(classify, userId, user_message, user_diet, context, recipes, client, conn)
+        print(user_diet)
         print(json.dumps(response), flush=True)
         
 
