@@ -1,62 +1,56 @@
 import { NextRequest, NextResponse } from "next/server";
-import { spawn } from "child_process";
+import { useSession } from "next-auth/react";
 
-// API Route handler
+// export async function POST(req: NextRequest) {
+//   console.log("POST request received at /api/chatbot");
+//   return NextResponse.json({ message: "API route is working" });
+// }
+
+// Google Cloud Function URL
+const cloudFunctionUrl = "https://function-2-335404116403.us-central1.run.app";
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { message }: { message: string } = body; // Type the input message
-    const uid = 1; // Static UID for now
+    const { message }: { message: string } = body;
 
-    // Prepare the input for the Python script
-    const input = JSON.stringify({ uid, message });
+    const { data: session } = useSession(); // Get session data
+    if (!session || !session.user || !session.user.id) {
+      return NextResponse.json(
+        { error: "User is not authenticated" },
+        { status: 401 }
+      );
+    }
 
-    // Spawn the Python process, referencing the correct file path 'chatBot.py'
-    const pythonProcess = spawn("python3", ["app/api/chatbot/chatbot.py"], {
-      env: { ...process.env }, // Pass existing Node.js environment to Python
+    const uid = session.user.id; // Extract the user's ID from the session
+
+    const payload = { uid, message };
+
+    const response = await fetch(cloudFunctionUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     });
 
-    // Send input to Python script
-    pythonProcess.stdin.write(input);
-    pythonProcess.stdin.end();
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error details:", errorText);
+      return NextResponse.json(
+        { error: "Failed to call Google Cloud Function" },
+        { status: response.status }
+      );
+    }
 
-    let result = "";
+    const result = await response.json();
 
-    // Collect the data from Python stdout
-    pythonProcess.stdout.on("data", (data) => {
-      result += data.toString();
-    });
+    // Ensure the result has the expected structure
+    if (!result.message || typeof result.message !== "string") {
+      throw new Error("Invalid response format from Cloud Function");
+    }
 
-    // Collect any errors from Python stderr
-    pythonProcess.stderr.on("data", (data) => {
-      console.error("Error:", data.toString());
-    });
-
-    // Handle the closing of the process
-    return new Promise((resolve, reject) => {
-      pythonProcess.on("close", (code) => {
-        if (code === 0) {
-          try {
-            // Parse the JSON response from Python
-            const output = JSON.parse(result);
-            resolve(NextResponse.json(output)); // Send the response back to the frontend
-          } catch (error) {
-            console.error("Failed to parse Python response:", error);
-            reject(
-              NextResponse.json(
-                { error: "Error processing response from Python." },
-                { status: 500 }
-              )
-            );
-          }
-        } else {
-          console.error(`Python process exited with code ${code}`);
-          reject(
-            NextResponse.json({ error: "Python process failed" }, { status: 500 })
-          );
-        }
-      });
-    });
+    return NextResponse.json(result);
   } catch (error) {
     console.error("Unexpected Error:", error);
     return NextResponse.json({ error: "Unexpected server error" }, { status: 500 });
