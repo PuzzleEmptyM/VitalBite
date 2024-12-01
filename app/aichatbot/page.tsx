@@ -18,24 +18,35 @@ const Page = () => {
   const [userMessage, setUserMessage] = useState("");
 
   const handleSendMessage = async () => {
-    const staticMessage = "Please give me a recipe with shrimp?";
-
+    if (!userMessage.trim()) return; // Prevent sending empty messages
+  
     // Add the user's message to the messages state
-    const newMessages = [...messages, { type: "user", text: staticMessage }];
+    const newMessages = [...messages, { type: "user", text: userMessage }];
     setMessages(newMessages);
-
+    setUserMessage(""); // Clear the input field
+  
     // Show "Typing..." indicator
     setMessages([...newMessages, { type: "bot", text: "Typing..." }]);
-
+  
     try {
-      // Call the API route that interacts with Python
-      const response = await fetch("/api/chatbot", {
+      // Call the API route that interacts with the Google Cloud Function
+      const response = await fetch("../api/chatbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: staticMessage }), // Send the static message
+        body: JSON.stringify({ message: userMessage }), // Send the user's message
       });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
       const data = await response.json();
-
+  
+      // Validate the structure of the response
+      if (!data.message) {
+        throw new Error("Invalid response format: missing 'message' field");
+      }
+  
       // Add the bot's response to the messages
       setMessages([...newMessages, { type: "bot", text: data.message }]);
     } catch (error) {
@@ -46,6 +57,7 @@ const Page = () => {
       ]);
     }
   };
+  
 
   return (
     <div className="bg-white min-h-screen p-4 font-sans">
@@ -103,6 +115,7 @@ const Page = () => {
               placeholder="Type your question..."
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} // Handle Enter key
               className="flex-1 bg-transparent outline-none text-forest_green placeholder-forest_green"
             />
             <button
