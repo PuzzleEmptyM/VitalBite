@@ -18,22 +18,21 @@ const Page = () => {
   const [userMessage, setUserMessage] = useState("");
 
   const handleSendMessage = async () => {
-    if (!userMessage.trim()) return; // Prevent sending empty messages
+    if (!userMessage) return; // Prevent empty messages
   
-    // Add the user's message to the messages state
     const newMessages = [...messages, { type: "user", text: userMessage }];
     setMessages(newMessages);
-    setUserMessage(""); // Clear the input field
+    setUserMessage(""); // Clear input field
   
     // Show "Typing..." indicator
     setMessages([...newMessages, { type: "bot", text: "Typing..." }]);
   
     try {
-      // Call the API route that interacts with the Google Cloud Function
-      const response = await fetch("../api/chatbot", {
+      // Call the API route and include the user's UID
+      const response = await fetch("/api/chatbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }), // Send the user's message
+        body: JSON.stringify({ message: userMessage, uid: session?.user?.id }), // Pass UID from client-side
       });
   
       if (!response.ok) {
@@ -41,22 +40,16 @@ const Page = () => {
       }
   
       const data = await response.json();
-  
-      // Validate the structure of the response
-      if (!data.message) {
-        throw new Error("Invalid response format: missing 'message' field");
-      }
+      if (!data.message) throw new Error("Invalid response format: missing 'message' field");
   
       // Add the bot's response to the messages
       setMessages([...newMessages, { type: "bot", text: data.message }]);
     } catch (error) {
       console.error("Error:", error);
-      setMessages([
-        ...newMessages,
-        { type: "bot", text: "Something went wrong. Please try again." },
-      ]);
+      setMessages([...newMessages, { type: "bot", text: "Something went wrong. Please try again." }]);
     }
   };
+  
   
 
   return (
