@@ -29,7 +29,7 @@ export default function EditDietPage() {
                     console.error("UID not provided");
                     return;
                 }
-                const response = await axios.get(`/api/preferences?uid=${session.user.id}`);
+                const response = await axios.get(`../api/preferences?uid=${session.user.id}`);
                 if (response.status === 200) {
                     const dietIds = response.data.map((diet: { dietId: number }) => diet.dietId);
                     setSelectedDiets(dietIds);
@@ -52,7 +52,7 @@ export default function EditDietPage() {
               console.error("UID not provided");
               return;
           }
-          const response = await axios.post(`/api/preferences?uid=${session.user.id}`, {
+          const response = await axios.post(`../api/preferences?uid=${session.user.id}`, {
               diets: selectedDiets,
           });
           
