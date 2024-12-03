@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Define the conditions and their corresponding diet IDs
 const conditions = [
@@ -22,6 +23,7 @@ interface ConditionSelectorProps {
 const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectConditions, initialSelectedConditions = [], isEditMode = false, onDeleteCondition }) => {
   const [selectedConditions, setSelectedConditions] = useState<number[]>([]);
   const { data: session } = useSession();
+  const router = useRouter();
 
   // Set initial selected conditions when the component mounts
   useEffect(() => {
@@ -60,6 +62,8 @@ const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectCondition
             }
         }
     }
+    // Force a page refresh to ensure UI is always up to date
+    router.refresh();
 };
 
   // Pass the selected diet IDs to the parent component whenever they change
