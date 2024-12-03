@@ -6,6 +6,9 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const origin = req.nextUrl.origin;
 
+  console.log(`Pathname: ${pathname}`);
+  console.log(`Token: ${token ? JSON.stringify(token) : "No token found"}`);
+
   // Allow the request if the token is present and the user is not new
   if (token) {
     if (token.isNewUser && pathname !== "/signupgoogle") {
@@ -28,5 +31,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo.png|images/|signup).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo.png|images/|signup|login).*)"],
 };
