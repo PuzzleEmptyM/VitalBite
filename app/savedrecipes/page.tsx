@@ -41,7 +41,7 @@ const RecipePage: React.FC = () => {
   const sortedRecipes = recipes ? [...recipes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) : [];
 
   return (
-    <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
+    <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
       <Header />
 
       <main className="flex-grow flex flex-col items-center mb-16">
