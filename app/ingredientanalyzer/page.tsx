@@ -59,7 +59,7 @@ export default function IngredientsAnalyzerPage() {
   return (
     <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
       <Head>
-        <title>Diet Analyzer</title>
+        <title>Food Analyzer</title>
       </Head>
 
       {/* Header Section */}
@@ -79,7 +79,7 @@ export default function IngredientsAnalyzerPage() {
         </div>
 
         {/* Search Input */}
-        <div className="w-full max-w-md px-8">
+        <div className="w-full max-w-md px-8 font-playfair text-forest_green">
           <input
             type="text"
             value={food}
@@ -88,11 +88,11 @@ export default function IngredientsAnalyzerPage() {
               if (e.key === "Enter") handleSearch();
             }}
             placeholder="Search..."
-            className="w-full h-10 p-3 text-lg bg-cream border border-forest_green rounded-full shadow-md pl-9 placeholder-forest_green focus:outline-none focus:ring focus:ring-forest_green text-teal"
+            className="w-full h-10 p-3 text-lg bg-cream border-2 text-forest_green border-forest_green rounded-full shadow-md pl-9 placeholder-forest_green focus:outline-none focus:ring focus:ring-forest_green"
           />
           <button
             onClick={handleSearch}
-            className="mt-4 w-full h-10 bg-forest_green text-white rounded-full shadow-md"
+            className="mt-4 w-full h-10 bg-mint border-2 border-forest_green text-forest_green rounded-full shadow-md font-bold "
           >
             Analyze
           </button>
@@ -105,11 +105,11 @@ export default function IngredientsAnalyzerPage() {
               <p className="text-lg font-bold">Thinking...</p>
             ) : result ? (
               <>
-                <p className="text-xl font-bold">{result.base}</p>
+                <p className="text-xl font-bold text-forest_green">{result.base}</p>
                 <p className="mt-4">{result.info}</p>
               </>
             ) : (
-              <p className="text-lg font-bold">Enter a food or ingredient to analyze.</p>
+              <p className="text-lg font-bold text-forest_green rounded">Enter a food or ingredient to analyze.</p>
             )}
           </div>
         </div>
