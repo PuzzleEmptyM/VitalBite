@@ -45,7 +45,7 @@ const LifestyleTipsPage: React.FC = () => {
     <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
       <Header />
 
-      <main className="flex-grow flex flex-col items-center mb-16">
+      <main className="flex-grow flex flex-col items-center mb-12">
         <img
           src="/images/branch.png"
           alt="Branch image"
@@ -56,7 +56,7 @@ const LifestyleTipsPage: React.FC = () => {
             alignItems: "center",
           }}
         />
-        <h1 className="text-xl font-bold text-center text-forest_green mb-2 font-playfair">Lifestyle Tips</h1>
+        <h1 className="text-xl font-bold text-center text-forest_green mb-6 font-playfair">Lifestyle Tips</h1>
 
         {loading ? (
           <p>Loading...</p> // Display loading state
