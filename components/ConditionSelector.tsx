@@ -17,14 +17,12 @@ interface ConditionSelectorProps {
 }
 
 const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectConditions, initialSelectedConditions = [], isEditMode = false }) => {
-  const [selectedConditions, setSelectedConditions] = useState<number[]>([]);
+  const [selectedConditions, setSelectedConditions] = useState<number[]>(initialSelectedConditions);
 
-  // Set initial selected conditions when the component mounts
+  // Set initial selected conditions when the component mounts or when initialSelectedConditions change
   useEffect(() => {
-    if (isEditMode && initialSelectedConditions.length > 0) {
-      setSelectedConditions(initialSelectedConditions);
-    }
-  }, [initialSelectedConditions, isEditMode]);
+    setSelectedConditions(initialSelectedConditions);
+  }, [initialSelectedConditions]);
 
   // Function to handle selecting or deselecting a condition
   const handleConditionClick = (dietId: number) => {
@@ -47,7 +45,7 @@ const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectCondition
           key={condition.dietId}
           type="button"
           className={`py-2 px-2 border border-gray-300 shadow-md text-teal font-playfair font-normal rounded-md hover:bg-mint hover:text-white ${
-            selectedConditions.includes(condition.dietId) ? "bg-mint text-white" : initialSelectedConditions.includes(condition.dietId) ? "bg-gray-300 text-gray-700" : ""
+            selectedConditions.includes(condition.dietId) ? "bg-mint text-white" : ""
           }`}
           onClick={() => handleConditionClick(condition.dietId)}
         >
