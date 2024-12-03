@@ -29,7 +29,7 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
+    <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
       <Head>
         <title>User Profile</title>
       </Head>

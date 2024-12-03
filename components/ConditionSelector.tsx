@@ -37,8 +37,8 @@ const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectCondition
         <button
           key={condition.dietId}
           type="button"
-          className={`py-2 px-4 border border-gray-300 shadow-md text-teal font-playfair font-normal rounded-md hover:bg-forest_green hover:text-white ${
-            selectedConditions.includes(condition.dietId) ? "bg-forest_green text-white" : ""
+          className={`py-2 px-2 border border-gray-300 shadow-md text-teal font-playfair font-normal rounded-md hover:bg-mint hover:text-white ${
+            selectedConditions.includes(condition.dietId) ? "bg-mint text-white" : ""
           }`}
           onClick={() => handleConditionClick(condition.dietId)}
         >
