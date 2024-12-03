@@ -1,3 +1,4 @@
+import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import { Pool } from "pg";
 
@@ -80,6 +81,122 @@ export const GET = async (req: Request) => {
     console.error("Error fetching preferences:", error);
     return NextResponse.json(
       { error: "Failed to fetch preferences" },
+      { status: 500 }
+    );
+  }
+};
+
+// --------------------------------------------
+// API ROUTE TO SAVE DIET PREFERENCES FOR A USER (POST)
+// --------------------------------------------
+export const POST = async (req: Request) => {
+  try {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+    // Ensure the user is authenticated
+    if (!token) {
+      return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+    }
+
+    const { diets } = await req.json();
+
+    // Validate diets array
+    if (!diets || !Array.isArray(diets)) {
+      return NextResponse.json({ error: "Invalid diets data" }, { status: 400 });
+    }
+
+    const userId = token.uid;
+
+    // Delete existing preferences for the user before adding new ones
+    const deleteQuery = `
+      DELETE FROM "userpreference"
+      WHERE "uid" = $1
+    `;
+    await runSQL(deleteQuery, [userId]);
+
+    // Insert the new preferences into the database
+    if (diets.length > 0) {
+      const insertQuery = `
+        INSERT INTO "userpreference" ("uid", "dietId")
+        VALUES ${diets.map((_, index) => `($1, $${index + 2})`).join(", ")}
+      `;
+      const params = [userId, ...diets];
+      await runSQL(insertQuery, params);
+    }
+
+    return NextResponse.json(
+      { message: "Preferences saved successfully" },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Error saving preferences:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+};
+
+
+// --------------------------------------------
+// API ROUTE TO DELETE DIET PREFERENCE FOR A SPECIFIC UID AND DIETID
+// --------------------------------------------
+// This API route deletes a specific diet preference associated with a user (UID).
+// Example Usage:
+// - Request: DELETE /api/preferences?uid=<uid>&dietId=<dietId>
+// - Example: DELETE /api/preferences?uid=1&dietId=5
+// - Response (Success):
+//   { "message": "Preference deleted successfully" }
+// - Response (No Preference Found):
+//   { "message": "No matching preference found" }
+// - Response (Error):
+//   { "error": "Failed to delete preference" }
+export const DELETE = async (req: Request) => {
+  try {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+    // Ensure the user is authenticated
+    if (!token) {
+      return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const uid = searchParams.get("uid");
+    const dietId = searchParams.get("dietId");
+
+    // Validate UID and dietId
+    if (!uid || !dietId) {
+      console.error("UID or dietId not provided");
+      return NextResponse.json({ error: "UID and dietId are required" }, { status: 400 });
+    }
+
+    console.log(`Deleting diet ID: ${dietId} for UID: ${uid}`);
+
+    // SQL query to delete the specific diet preference for the specified UID
+    const query = `
+      DELETE FROM "userpreference"
+      WHERE "uid" = $1 AND "dietId" = $2
+    `;
+    const result = await runSQL(query, [uid, dietId]);
+
+    // Check if any rows were affected (i.e., a preference was deleted)
+    if (result.rowCount === 0) {
+      console.log(`No matching preference found for UID: ${uid} and dietId: ${dietId}`);
+      return NextResponse.json(
+        { message: "No matching preference found" },
+        { status: 404 }
+      );
+    }
+
+    console.log("Preference deleted successfully");
+    return NextResponse.json(
+      { message: "Preference deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting preference:", error);
+    return NextResponse.json(
+      { error: "Failed to delete preference" },
       { status: 500 }
     );
   }

@@ -29,9 +29,12 @@ model context {
 }
 
 model diettype {
-  dietId         Int              @id(map: "DietType_pkey") @default(autoincrement())
-  dietName       String           @unique(map: "DietType_dietName_key")
-  userpreference userpreference[]
+  dietId                   Int                        @id(map: "DietType_pkey") @default(autoincrement())
+  dietName                 String                     @unique(map: "DietType_dietName_key")
+  dos_and_donts            dos_and_donts[]
+  healthy_tips             healthy_tips[]
+  understanding_conditions understanding_conditions[]
+  userpreference           userpreference[]
 }
 
 model recipe {
@@ -59,4 +62,28 @@ model userpreference {
   dietId       Int
   uid          String?  @db.Uuid
   diettype     diettype @relation(fields: [dietId], references: [dietId], onDelete: Cascade, map: "UserPreference_dietId_fkey")
+}
+
+model dos_and_donts {
+  dosdontsid Int      @id @default(autoincrement())
+  dietId     Int
+  do_items   Json?
+  dont_items Json?
+  diettype   diettype @relation(fields: [dietId], references: [dietId], onDelete: Cascade, onUpdate: NoAction, map: "fk_diet")
+}
+
+model healthy_tips {
+  healthyTipId Int      @id @default(autoincrement())
+  dietId       Int
+  tip          Json
+  title        String?
+  diettype     diettype @relation(fields: [dietId], references: [dietId], onDelete: Cascade, onUpdate: NoAction, map: "fk_diet")
+}
+
+model understanding_conditions {
+  conditionid           Int      @id @default(autoincrement())
+  dietId                Int
+  condition_description String?
+  header                String?
+  diettype              diettype @relation(fields: [dietId], references: [dietId], onDelete: Cascade, onUpdate: NoAction, map: "fk_diet")
 }

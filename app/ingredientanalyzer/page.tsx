@@ -57,9 +57,9 @@ export default function IngredientsAnalyzerPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
+    <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
       <Head>
-        <title>Ingredient Analyzer</title>
+        <title>Diet Analyzer</title>
       </Head>
 
       {/* Header Section */}
@@ -70,7 +70,7 @@ export default function IngredientsAnalyzerPage() {
         {/* Title Section */}
         <div className="text-center">
           <h1 className="text-4xl font-light text-forest_green font-playfair relative pt-9">
-            Food Analyzer
+            Diet Analyzer
             <span className="absolute mt-4 left-1/2 -translate-x-1/2 bottom-[-8px] w-80 h-[2px] rounded bg-forest_green"></span>
           </h1>
           <p className="text-forest_green font-playfair mt-4">
