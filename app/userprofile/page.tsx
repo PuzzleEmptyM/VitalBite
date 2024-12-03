@@ -98,7 +98,7 @@ export default function UserProfilePage() {
         </div>
         <div
           className="w-full max-w-md bg-mint rounded-3xl border border-forest_green focus:outline focus:ring focus:ring-forest_green flex items-center justify-center p-2 mb-6 shadow-xl mt-6"
-          onClick={() => router.push("")}
+          onClick={() => router.push("/editdiet")}
         >
           <div className="flex flex-col items-center ">
             <img

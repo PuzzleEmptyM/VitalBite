@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Define the conditions and their corresponding diet IDs
 const conditions = [
@@ -12,22 +15,59 @@ const conditions = [
 
 interface ConditionSelectorProps {
   onSelectConditions: (selectedDiets: number[]) => void;
+  initialSelectedConditions?: number[];
+  isEditMode?: boolean;
+  onDeleteCondition?: (dietId: number) => void;
 }
 
-const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectConditions }) => {
+const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectConditions, initialSelectedConditions = [], isEditMode = false, onDeleteCondition }) => {
   const [selectedConditions, setSelectedConditions] = useState<number[]>([]);
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  // Set initial selected conditions when the component mounts
+  useEffect(() => {
+    if (isEditMode && initialSelectedConditions.length > 0) {
+      setSelectedConditions(initialSelectedConditions);
+    }
+  }, [initialSelectedConditions, isEditMode]);
 
   // Function to handle selecting or deselecting a condition
-  const handleConditionClick = (dietId: number) => {
-    setSelectedConditions((prevSelected) =>
-      prevSelected.includes(dietId)
-        ? prevSelected.filter((item) => item !== dietId) // Remove if already selected
-        : [...prevSelected, dietId]                      // Add if not already selected
-    );
-  };
+  const handleConditionClick = async (dietId: number) => {
+    if (selectedConditions.includes(dietId)) {
+        // If already selected and is in edit mode, handle delete
+        if (isEditMode && initialSelectedConditions.includes(dietId)) {
+            if (onDeleteCondition) {
+                await onDeleteCondition(dietId); // Wait for the delete operation to complete
+                setSelectedConditions((prevSelected) => prevSelected.filter((item) => item !== dietId));
+            }
+        } else {
+            // Remove from selected conditions
+            setSelectedConditions((prevSelected) => prevSelected.filter((item) => item !== dietId));
+        }
+    } else {
+        // Add if not already selected
+        setSelectedConditions((prevSelected) => [...prevSelected, dietId]);
+        // If in edit mode, add diet in real-time
+        if (isEditMode) {
+            try {
+                if (session && session.user && session.user.id) {
+                    await axios.post(`/api/preferences?uid=${session.user.id}`, {
+                        diets: [...selectedConditions, dietId],
+                    });
+                }
+            } catch (error) {
+                console.error("Failed to add diet:", error);
+                alert("An error occurred while adding the diet. Please try again.");
+            }
+        }
+    }
+    // Force a page refresh to ensure UI is always up to date
+    router.refresh();
+};
 
   // Pass the selected diet IDs to the parent component whenever they change
-  React.useEffect(() => {
+  useEffect(() => {
     onSelectConditions(selectedConditions);
   }, [selectedConditions, onSelectConditions]);
 
@@ -38,7 +78,7 @@ const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectCondition
           key={condition.dietId}
           type="button"
           className={`py-2 px-2 border border-gray-300 shadow-md text-teal font-playfair font-normal rounded-md hover:bg-mint hover:text-white ${
-            selectedConditions.includes(condition.dietId) ? "bg-mint text-white" : ""
+            selectedConditions.includes(condition.dietId) ? "bg-mint text-white" : initialSelectedConditions.includes(condition.dietId) ? "bg-gray-300 text-gray-700" : ""
           }`}
           onClick={() => handleConditionClick(condition.dietId)}
         >
