@@ -44,6 +44,7 @@ async function runSQL(query: string, params: any[] = []) {
 // - Response (Error):
 //   { "error": "Failed to fetch preferences" }
 export const GET = async (req: Request) => {
+  console.log("Request Headers:", req.headers);
   try {
     console.log("Fetching diet IDs by UID...");
     const { searchParams } = new URL(req.url);
@@ -90,6 +91,7 @@ export const GET = async (req: Request) => {
 // API ROUTE TO SAVE DIET PREFERENCES FOR A USER (POST)
 // --------------------------------------------
 export const POST = async (req: Request) => {
+  console.log("Request Headers:", req.headers);
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
@@ -152,6 +154,7 @@ export const POST = async (req: Request) => {
 // - Response (Error):
 //   { "error": "Failed to delete preference" }
 export const DELETE = async (req: Request) => {
+  console.log("Request Headers:", req.headers);
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
