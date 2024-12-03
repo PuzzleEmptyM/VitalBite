@@ -19,7 +19,7 @@ export default function RootLayout({ children }: Props) {
 
         {/* Meta tags for PWA compatibility on iOS */}
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
 
         {/* Theme color for browser UI */}
