@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import Header from "@/components/Header";
-import DoAndDont from "@/components/DoAndDont";
 import FooterNavigation from "@/components/FooterNavigation";
 import Image from "next/image";
 
@@ -61,7 +60,8 @@ export default function DoAndDontPage() {
         ) : (
           dosAndDonts.map((item, index) => (
             <div key={index} className="my-4 p-4 border rounded-lg shadow-md w-full max-w-lg">
-              <h2 className="font-bold text-lg">{`Diet Type ${item.dietId}`}</h2>
+              {/* Replaced the Diet Type with actual diet name */}
+              <h2 className="font-bold text-lg">{item.dietName}</h2> 
               <h3 className="font-semibold text-md mt-2">Do's</h3>
               <ul className="list-disc pl-6">
                 {item.do_items && item.do_items.map((doItem: string, i: number) => (

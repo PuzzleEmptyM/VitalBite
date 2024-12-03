@@ -49,11 +49,16 @@ export const GET = async (req: Request) => {
 
     const dietIds = dietResult.rows.map((row: { dietId: number }) => row.dietId);
 
-    // Now fetch do's and don'ts for these dietIds
+    // Now fetch do's and don'ts for these dietIds along with the diet name
     const dosAndDontsQuery = `
-      SELECT "do_items", "dont_items", "dietId"
+      SELECT 
+        "do_items", 
+        "dont_items", 
+        "dos_and_donts"."dietId", 
+        "diettype"."dietName"
       FROM "dos_and_donts"
-      WHERE "dietId" = ANY($1)
+      JOIN "diettype" ON "dos_and_donts"."dietId" = "diettype"."dietId"
+      WHERE "dos_and_donts"."dietId" = ANY($1)
     `;
     const dosAndDontsResult = await runSQL(dosAndDontsQuery, [dietIds]);
 
