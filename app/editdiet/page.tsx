@@ -1,7 +1,6 @@
 "use client";
 
 import ConditionSelector from "@/components/ConditionSelector";
-import Link from "next/link";
 import FooterNavigation from "@/components/FooterNavigation";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -69,31 +68,13 @@ export default function EditDietPage() {
       }
   };
 
-    const handleDeleteDiet = async (dietId: number) => {
-      try {
-          if (!session || !session.user || !session.user.id) {
-              console.error("UID not provided");
-              return;
-          }
-          const response = await axios.delete(`/api/preferences?uid=${session.user.id}&dietId=${dietId}`);
-          if (response.status === 200) {
-              setSelectedDiets((prevDiets) => prevDiets.filter((id) => id !== dietId));
-          } else {
-              alert("Failed to delete diet preference. Please try again.");
-          }
-      } catch (error) {
-          console.error("Delete diet error:", error);
-          alert("An unexpected error occurred. Please try again.");
-      }
-  };
-
     return (
         <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
           {/* Header Section */}
           <div>
           <Header />
           </div>
-          <div className="flex-grow flex flex-col items-center mb-16">
+          <div className="flex-grow flex flex-col items-center mt-10 mb-16">
             <div className="flex flex-col items-center">
               {/* Icon */}
               <img
@@ -122,9 +103,19 @@ export default function EditDietPage() {
             <ConditionSelector 
                 onSelectConditions={setSelectedDiets} 
                 initialSelectedConditions={preSelectedDiets} 
-                isEditMode={true} // New prop to enable edit mode behavior
-                onDeleteCondition={handleDeleteDiet}
+                isEditMode={true} 
             />
+            
+            {/* Update Diet Button */}
+            <div className="flex justify-center mt-6">
+                <button
+                    onClick={handleUpdateDiets}
+                    className="py-2 px-6 bg-teal text-white rounded-full font-playfair shadow-md hover:bg-dark_teal"
+                >
+                    Update Diets
+                </button>
+            </div>
+            
             {/* Footer */}
             <FooterNavigation />
           </div>
