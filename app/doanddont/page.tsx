@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import Header from "@/components/Header";
 import FooterNavigation from "@/components/FooterNavigation";
-import Image from "next/image";
 
 export default function DoAndDontPage() {
   const { data: session } = useSession(); // Get session data
@@ -38,46 +37,59 @@ export default function DoAndDontPage() {
   }, [session?.user?.id]); // Only refetch when the session id changes
 
   return (
-    <div className="flex flex-col min-h-screen px-6 bg-white p-4 font-sans">
+    <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
       <Head>
         <title>Do's and Don'ts | VitalBite</title>
         <meta name="description" content="A guide of do's and don'ts based on users diet needs." />
       </Head>
+
+      {/* Header */}
       <Header />
-      <main className="flex-grow flex flex-col items-center pb-12">
+
+      {/* Main Content */}
+      <main className="flex-grow flex flex-col items-center mb-16">
         <img
           src="/images/avocado.png"
           alt="avocado image"
-          className="w-60 h-60 mb-0"
-          style={{ marginTop: '-15px' }}
+          className="w-80 h-80"
+          style={{
+            marginTop: "-65px",
+            marginBottom: "-75px",
+          }}
         />
-        <h1 className="text-xl font-bold text-center text-forest_green mb-2 font-playfair">Do's and Don'ts</h1>
+        <h1 className="text-2xl font-semibold text-forest_green font-playfair mb-2 mt-6">Do's and Don'ts</h1>
 
         {loading ? (
-          <p>Loading...</p> // Display loading state
+          <p className="text-base text-forest_green font-playfair">Loading...</p>
         ) : dosAndDonts.length === 0 ? (
-          <p>No do's and don'ts available for your diet preferences</p>
+          <p className="text-base text-forest_green font-playfair">
+            No do's and don'ts available for your diet preferences
+          </p>
         ) : (
           dosAndDonts.map((item, index) => (
-            <div key={index} className="my-4 p-4 border rounded-lg shadow-md w-full max-w-lg">
-              {/* Replaced the Diet Type with actual diet name */}
-              <h2 className="font-bold text-lg">{item.dietName}</h2> 
-              <h3 className="font-semibold text-md mt-2">Do's</h3>
-              <ul className="list-disc pl-6">
-                {item.do_items && item.do_items.map((doItem: string, i: number) => (
-                  <li key={i}>{doItem}</li>
-                ))}
+            <div
+              key={index}
+              className="bg-mint rounded-3xl shadow-md border border-forest_green p-4 w-80 mb-6"
+            >
+              <h2 className="font-semibold text-lg font-playfair text-forest_green mb-2">
+                {item.dietName}
+              </h2>
+              <h3 className="font-semibold text-md font-playfair text-forest_green">Do's</h3>
+              <ul className="list-disc pl-6 text-base text-forest_green font-playfair">
+                {item.do_items &&
+                  item.do_items.map((doItem: string, i: number) => <li key={i}>{doItem}</li>)}
               </ul>
-              <h3 className="font-semibold text-md mt-2">Don'ts</h3>
-              <ul className="list-disc pl-6">
-                {item.dont_items && item.dont_items.map((dontItem: string, i: number) => (
-                  <li key={i}>{dontItem}</li>
-                ))}
+              <h3 className="font-semibold text-md font-playfair text-forest_green mt-4">Don'ts</h3>
+              <ul className="list-disc pl-6 text-base text-forest_green font-playfair">
+                {item.dont_items &&
+                  item.dont_items.map((dontItem: string, i: number) => <li key={i}>{dontItem}</li>)}
               </ul>
             </div>
           ))
         )}
       </main>
+
+      {/* Footer */}
       <FooterNavigation />
     </div>
   );
