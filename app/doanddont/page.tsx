@@ -45,7 +45,7 @@ export default function DoAndDontPage() {
         <meta name="description" content="A guide of do's and don'ts based on users diet needs." />
       </Head>
       <Header />
-      <main className="flex-grow flex flex-col items-center">
+      <main className="flex-grow flex flex-col items-center pb-12">
         <img
           src="/images/avocado.png"
           alt="avocado image"
