@@ -4,11 +4,12 @@ import { getToken } from "next-auth/jwt";
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const { pathname } = req.nextUrl;
+  const origin = req.nextUrl.origin;
 
   // Allow the request if the token is present and the user is not new
   if (token) {
     if (token.isNewUser && pathname !== "/signupgoogle") {
-      return NextResponse.redirect(`${req.nextUrl.origin}/signupgoogle`);
+      return NextResponse.redirect(`${origin}/signupgoogle`);
     }
     return NextResponse.next();
   }
@@ -20,7 +21,7 @@ export async function middleware(req: NextRequest) {
     pathname !== "/signupgoogle" &&
     !pathname.startsWith("/api/auth")
   ) {
-    return NextResponse.redirect(`${req.nextUrl.origin}/login`);
+    return NextResponse.redirect(`${origin}/login`);
   }
 
   return NextResponse.next();
