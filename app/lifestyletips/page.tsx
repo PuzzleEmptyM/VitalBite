@@ -1,86 +1,93 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
-import Head from "next/head";
+import { useEffect, useState } from "react";
 
 const LifestyleTipsPage: React.FC = () => {
-  const { data: session } = useSession();
+  const { data: session } = useSession(); // Get session data
   const [tips, setTips] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Adding loading state for better UX
 
   useEffect(() => {
-    const fetchLifestyleTips = async () => {
+    const fetchTips = async () => {
       if (session?.user?.id) {
         try {
-          setLoading(true);
+          setLoading(true); // Start loading when fetching
           const response = await fetch(`/api/lifestyletips?uid=${session.user.id}`);
           const data = await response.json();
 
+          // Ensure data is an array before setting tips
           if (Array.isArray(data)) {
             setTips(data);
           } else {
-            setTips([]);
+            setTips([]); // Handle unexpected data format
           }
         } catch (error) {
           console.error("Error fetching lifestyle tips:", error);
-          setTips([]);
+          setTips([]); // Set empty array in case of an error
         } finally {
-          setLoading(false);
+          setLoading(false); // Stop loading
         }
       }
     };
 
-    if (session?.user?.id) fetchLifestyleTips();
-  }, [session?.user?.id]);
+    if (session?.user?.id) fetchTips();
+  }, [session?.user?.id]); // Only refetch when the session id changes
+
+  // Sort tips by timestamp in descending order
+  const sortedTips = tips
+    ? [...tips].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    : [];
 
   return (
     <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
-      <Head>
-        <title>Lifestyle Tips | VitalBite</title>
-      </Head>
-
-      {/* Header Section */}
       <Header />
 
-      {/* Main Content */}
       <main className="flex-grow flex flex-col items-center mb-16">
         <img
           src="/images/branch.png"
           alt="Branch image"
-          className="w-80 h-80"
-          style={{ marginTop: "-65px", marginBottom: "-75px" }}
+          className="w-60 h-60"
+          style={{
+            marginTop: "-45px",
+            marginBottom: "-15px",
+            alignItems: "center",
+          }}
         />
-        <h1 className="text-2xl font-semibold text-forest_green font-playfair mb-2">
-          Lifestyle Tips
-        </h1>
+        <h1 className="text-xl font-bold text-center text-forest_green mb-2 font-playfair">Lifestyle Tips</h1>
 
         {loading ? (
-          <p className="text-base text-forest_green font-playfair">Loading...</p>
-        ) : tips.length === 0 ? (
-          <p className="text-base text-forest_green font-playfair">
-            No lifestyle tips available for you.
-          </p>
+          <p>Loading...</p> // Display loading state
+        ) : sortedTips.length === 0 ? (
+          <p>No lifestyle tips available yet. Check back soon!</p>
         ) : (
-          tips.map((tip) => (
+          sortedTips.map((tip, index) => (
             <div
-              key={tip.tipId}
-              className="bg-mint rounded-3xl shadow-md border border-forest_green p-4 w-80 mb-6"
+              key={index}
+              className="bg-mint rounded-3xl shadow-md border border-forest_green p-4 w-full max-w-lg mb-4"
             >
-              <h3 className="font-semibold text-lg font-playfair text-forest_green mb-2">
-                {tip.summary || "Tip"}
-              </h3>
-              <p className="text-base text-center font-playfair text-forest_green mb-6">
+              {/* Summary at the top in bold */}
+              {tip.summary && (
+                <p className="font-semibold text-lg text-forest_green mb-4 text-center">
+                  {tip.summary}
+                </p>
+              )}
+
+              {/* Tip content in the middle */}
+              <p className="text-base text-center font-playfair text-forest_green mb-4">
                 {tip.tip}
+              </p>
+
+              {/* Tip number at the bottom in smaller italic font */}
+              <p className="text-sm text-gray-600 text-right italic">
+                Tip #{index + 1}
               </p>
             </div>
           ))
         )}
       </main>
-
-      {/* Footer */}
       <FooterNavigation />
     </div>
   );
