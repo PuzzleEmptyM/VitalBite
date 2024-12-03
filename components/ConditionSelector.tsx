@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Define the conditions and their corresponding diet IDs
 const conditions = [
@@ -12,22 +12,31 @@ const conditions = [
 
 interface ConditionSelectorProps {
   onSelectConditions: (selectedDiets: number[]) => void;
+  initialSelectedConditions?: number[];
+  isEditMode?: boolean;
 }
 
-const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectConditions }) => {
+const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectConditions, initialSelectedConditions = [], isEditMode = false }) => {
   const [selectedConditions, setSelectedConditions] = useState<number[]>([]);
+
+  // Set initial selected conditions when the component mounts
+  useEffect(() => {
+    if (isEditMode && initialSelectedConditions.length > 0) {
+      setSelectedConditions(initialSelectedConditions);
+    }
+  }, [initialSelectedConditions, isEditMode]);
 
   // Function to handle selecting or deselecting a condition
   const handleConditionClick = (dietId: number) => {
     setSelectedConditions((prevSelected) =>
       prevSelected.includes(dietId)
-        ? prevSelected.filter((item) => item !== dietId) // Remove if already selected
-        : [...prevSelected, dietId]                      // Add if not already selected
+        ? prevSelected.filter((item) => item !== dietId)
+        : [...prevSelected, dietId]
     );
   };
 
   // Pass the selected diet IDs to the parent component whenever they change
-  React.useEffect(() => {
+  useEffect(() => {
     onSelectConditions(selectedConditions);
   }, [selectedConditions, onSelectConditions]);
 
@@ -38,7 +47,7 @@ const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectCondition
           key={condition.dietId}
           type="button"
           className={`py-2 px-2 border border-gray-300 shadow-md text-teal font-playfair font-normal rounded-md hover:bg-mint hover:text-white ${
-            selectedConditions.includes(condition.dietId) ? "bg-mint text-white" : ""
+            selectedConditions.includes(condition.dietId) ? "bg-mint text-white" : initialSelectedConditions.includes(condition.dietId) ? "bg-gray-300 text-gray-700" : ""
           }`}
           onClick={() => handleConditionClick(condition.dietId)}
         >

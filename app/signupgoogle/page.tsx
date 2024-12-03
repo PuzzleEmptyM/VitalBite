@@ -2,44 +2,61 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import InputField from "../../components/InputField";
-import GetStartedButton from "../../components/GetStartedButton";
 import ConditionSelector from "../../components/ConditionSelector";
-import Link from "next/link";
 import DisclaimerFooter from "@/components/DisclaimerFooter";
-import LogoHeader from "@/components/LogoHeader";
+import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function GoogleSignUpPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [selectedDiets, setSelectedDiets] = useState<number[]>([]);
   const router = useRouter();
 
-//   const handleSignUp = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     try {
-//       const response = await axios.post("../api/users", {
-//         email,
-//         password,
-//         username: fullName,
-//       });
+  const { data: session } = useSession();
 
-//       if (response.status === 201) {
-//         // Successfully signed up, redirect to login or home page
-//         router.push("/login");
-//       } else {
-//         alert("Failed to create account. Please try again.");
-//       }
-//     } catch (error) {
-//       console.error("Sign-up error:", error);
-//       alert("An unexpected error occurred. Please try again.");
-//     }
-//   };
+  const handleSubmit = async () => {
+    try {
+      if (!session?.user?.id) {
+        console.error("User ID not found in session");
+        return;
+      }
+  
+      // Save user preferences
+      const response = await fetch("/api/preferences", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          uid: session.user.id,
+          diets: selectedDiets,
+        }),
+      });
+  
+      if (response.ok) {
+        // Trigger session update to clear the isNewUser flag
+        await fetch("/api/auth/session?update", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+  
+        // Logout the user, then redirect to home (forces session to be reset and reloaded)
+        await signOut({ redirect: false });
+        router.push("/login");
+      } else {
+        alert("Failed to save preferences. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error saving diet preferences:", error);
+      alert("An unexpected error occurred. Please try again.");
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-       {/* Header Section */}
-       <header className="absolute top-0 left-0 p-4">
+      {/* Header Section */}
+      <header className="absolute top-0 left-0 p-4">
         <img src="images/vb_logo.png" alt="VB Logo" className="w-20 h-20" />
       </header>
 
@@ -58,16 +75,21 @@ export default function GoogleSignUpPage() {
           />
         </div>
 
-          {/* Condition Selector */}
-          <div className="flex items-center justify-center">
-            <h2 className="relative w-52 h-16 text-center text-white bg-teal font-playfair py-2 px-4 rounded-full shadow-md">
-              Select the diet(s) you would like to follow
-            </h2>
-          </div>
-          <ConditionSelector />
+        {/* Condition Selector */}
+        <div className="flex items-center justify-center">
+          <h2 className="relative w-52 h-16 text-center text-white bg-teal font-playfair py-2 px-4 rounded-full shadow-md">
+            Select the diet(s) you would like to follow
+          </h2>
+        </div>
+        <ConditionSelector onSelectConditions={setSelectedDiets} />
 
-          {/* Get Started Button */}
-          <GetStartedButton text="Get Started" />
+        {/* Get Started Button */}
+        <button
+          onClick={handleSubmit}
+          className="w-full max-w-sm p-3 mt-6 bg-teal text-white rounded-lg font-semibold font-playfair"
+        >
+          Get Started
+        </button>
 
         {/* Create Account Link */}
         <Link
