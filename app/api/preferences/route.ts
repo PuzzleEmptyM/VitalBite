@@ -1,3 +1,4 @@
+import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import { Pool } from "pg";
 
@@ -80,6 +81,49 @@ export const GET = async (req: Request) => {
     console.error("Error fetching preferences:", error);
     return NextResponse.json(
       { error: "Failed to fetch preferences" },
+      { status: 500 }
+    );
+  }
+};
+
+// --------------------------------------------
+// API ROUTE TO SAVE DIET PREFERENCES FOR A USER (POST)
+// --------------------------------------------
+export const POST = async (req: Request) => {
+  try {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+    // Ensure the user is authenticated
+    if (!token) {
+      return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+    }
+
+    const { diets } = await req.json();
+
+    // Validate diets array
+    if (!diets || !Array.isArray(diets) || diets.length === 0) {
+      return NextResponse.json({ error: "Invalid diets data" }, { status: 400 });
+    }
+
+    const userId = token.uid;
+
+    // Insert the user preferences into the database
+    const query = `
+      INSERT INTO "userpreference" ("uid", "dietId")
+      VALUES ${diets.map((_, index) => `($1, $${index + 2})`).join(", ")}
+    `;
+    const params = [userId, ...diets];
+
+    await runSQL(query, params);
+
+    return NextResponse.json(
+      { message: "Preferences saved successfully" },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Error saving preferences:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
