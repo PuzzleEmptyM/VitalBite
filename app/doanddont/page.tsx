@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import Header from "@/components/Header";
 import FooterNavigation from "@/components/FooterNavigation";
+import Link from "next/link";
 
 export default function DoAndDontPage() {
   const { data: session } = useSession(); // Get session data
@@ -63,7 +64,7 @@ export default function DoAndDontPage() {
           <p className="text-base text-forest_green font-playfair">Loading...</p>
         ) : dosAndDonts.length === 0 ? (
           <p className="text-base text-forest_green font-playfair">
-            No do's and don'ts available for your diet preferences
+            No do's and don'ts available for your diet preference. <Link href="/editdiet" className="text-teal underline">Select your dietary preferences here.</Link>
           </p>
         ) : (
           dosAndDonts.map((item, index) => (
