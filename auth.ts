@@ -3,7 +3,6 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import { compare } from "bcryptjs";
-import { setCookie } from 'cookies-next';
 
 const prisma = new PrismaClient();
 
@@ -20,7 +19,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorization: {
         params: {
           scope: "openid profile email https://www.googleapis.com/auth/userinfo.profile",
-          prompt: "select_account",
         },
       },
       checks: [], // remove PKCE
@@ -71,45 +69,53 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: '/login',
   },
   callbacks: {
-    async jwt({ token, user, account }) {
-      // If signing in for the first time, we have `user` and `account` objects
-      if (account && user) {
-        // Try to find an existing user in the database
+    async jwt({ token, user }) {
+      console.log("JWT callback triggered");
+      if (user) {
+        console.log("User found, adding data to token:", user);
+        token.uid = user.id;  // Ensure `uid` is treated as a string (UUID)
+        token.email = user.email;
+        token.name = user.name;
+
+        // Check if user exists in database and use their existing uid
         const existingUser = await prisma.user.findUnique({
           where: { email: user.email },
         });
-  
+
         if (existingUser) {
-          // Existing user: add UID to token and set isNewUser to false
+          // Use the existing user's uid for consistency
           token.uid = existingUser.uid;
-          token.isNewUser = false;
         } else {
-          // New user: create them in the database and set isNewUser to true
+          // Create a new user if they don't exist, and store their UID in the token
           const newUser = await prisma.user.create({
             data: {
               email: user.email,
               username: user.name || "Unknown",
             },
           });
-          token.uid = newUser.uid;
-          token.isNewUser = true;
+          token.uid = newUser.uid; // Assign the new user's uid
         }
       }
-  
       return token;
     },
+
     async session({ session, token }) {
+      console.log("Session callback triggered");
       if (token?.uid) {
-        session.user.id = token.uid;
+        console.log("Adding user ID to session:", token.uid);
+        session.user.id = token.uid; // `uid` should be treated as a string (UUID)
       }
       session.user.email = token.email ?? "";
       session.user.name = token.name ?? "";
-      session.user.isNewUser = token.isNewUser ?? false;
-  
+      console.log("Session data:", session);
       return session;
     },
+
+    async redirect({ url, baseUrl }) {
+      console.log("Redirect callback triggered, base URL:", baseUrl);
+      return baseUrl;
+    },
   },
-  
 
   secret: process.env.NEXTAUTH_SECRET,
   debug: true,

@@ -99,7 +99,7 @@ export default function LoginPage() {
           return (
             <button
               key={provider.name}
-              onClick={() => signIn(provider.id, { prompt: "select_account", callbackUrl: "/" })}
+              onClick={() => signIn(provider.id)}
               className="w-full max-w-sm p-3 bg-teal text-white rounded-lg font-playfair font-semibold mb-4"
             >
               Sign in with {provider.name}
