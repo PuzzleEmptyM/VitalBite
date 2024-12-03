@@ -4,6 +4,7 @@ import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const ConditionPage = () => {
     const { data: session } = useSession();
@@ -83,7 +84,7 @@ const ConditionPage = () => {
 
                 {/* Condition Info Sections */}
                 {conditions.length === 0 ? (
-                    <p>No information available. Please select your dietary preferences.</p>
+                    <p>No information available. Please <Link href="/editdiet" className="text-teal underline">select your dietary preferences</Link>.</p>
                 ) : (
                     conditions.map((condition, index) => (
                         <section
