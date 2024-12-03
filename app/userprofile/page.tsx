@@ -96,6 +96,29 @@ export default function UserProfilePage() {
             </p>
           </div>
         </div>
+        <div
+          className="w-full max-w-md bg-mint rounded-3xl border border-forest_green focus:outline focus:ring focus:ring-forest_green flex items-center justify-center p-2 mb-6 shadow-xl mt-6"
+          onClick={() => router.push("")}
+        >
+          <div className="flex flex-col items-center ">
+            <img
+              src="/images/salad.png"
+              alt="salad bowl image"
+              className="w-40 h-40"
+              style={{ marginTop: "-15px" }}
+            />
+            <p
+              className="text-lg font-medium text-forest_green font-playfair"
+              style={{
+                marginTop: "-15px",
+                marginBottom: "6px",
+              }}
+            >
+              Change Your Diet
+            </p>
+          </div>
+        </div>
+
       </main>
 
       {/* Bottom Navigation */}
