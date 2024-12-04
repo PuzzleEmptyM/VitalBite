@@ -5,7 +5,7 @@ import FooterNavigation from "@/components/FooterNavigation";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
-import { useSession } from "next-auth/react";
+import { getCsrfToken, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function EditDietPage() {
@@ -13,65 +13,74 @@ export default function EditDietPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
-  }, [status, router]);
-
-  // Load existing user diets when the page loads
+  // Load existing user diets on component mount
   useEffect(() => {
     const fetchUserDiets = async () => {
       try {
         if (!session?.user?.id) {
-          console.error("User ID not available");
+          console.error("UID not provided");
           return;
         }
-
-        const response = await axios.get(`../api/preferences`, {
+        console.log("Fetching diets for UID:", session.user.id);
+        const response = await axios.get("/api/preferences", {
           params: { uid: session.user.id },
         });
-
         if (response.status === 200) {
           const dietIds = response.data.map(
             (diet: { dietId: number }) => diet.dietId
           );
           setSelectedDiets(dietIds);
         } else {
-          alert("Failed to load diets. Please try again.");
+          console.error("Unexpected response status:", response.status);
         }
       } catch (error) {
-        console.error("Error fetching diets:", error);
+        console.error(
+          "Failed to fetch user diets:",
+          error.response?.data || error.message
+        );
       }
     };
 
     if (session?.user?.id) {
+      console.log("Session UID:", session.user.id);
       fetchUserDiets();
+    } else {
+      console.error("Session UID not available.");
     }
   }, [session]);
 
   // Handles updating the user's diets
-  const handleUpdateDiets = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleUpdateDiets = async () => {
     try {
       if (!session?.user?.id) {
-        console.error("User ID not available");
+        console.error("UID not provided");
         return;
       }
-
-      const response = await axios.post("../api/preferences", {
-        uid: session.user.id,
-        diets: selectedDiets,
-      });
-
+  
+      const csrfToken = await getCsrfToken();
+  
+      const response = await axios.post(
+        "/api/preferences",
+        {
+          uid: session.user.id,
+          diets: selectedDiets,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "CSRF-Token": csrfToken,
+          },
+          withCredentials: true, // Include cookies in the request
+        }
+      );
+  
       if (response.status === 201) {
         alert("Diets updated successfully!");
       } else {
         alert("Failed to update diets. Please try again.");
       }
     } catch (error) {
-      console.error("Error updating diets:", error);
+      console.error("Update diets error:", error.response?.data || error.message);
       alert("An unexpected error occurred. Please try again.");
     }
   };
@@ -79,8 +88,9 @@ export default function EditDietPage() {
   return (
     <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
       {/* Header Section */}
-      <Header />
-
+      <div>
+        <Header />
+      </div>
       <div className="flex-grow flex flex-col items-center mt-10 mb-16">
         <div className="flex flex-col items-center">
           {/* Icon */}
@@ -108,23 +118,21 @@ export default function EditDietPage() {
             Please select/de-select <br /> your Diet(s)
           </h2>
         </div>
-        <form onSubmit={handleUpdateDiets}>
-          <ConditionSelector
-            onSelectConditions={setSelectedDiets}
-            initialSelectedConditions={selectedDiets}
-            isEditMode={true}
-          />
-          
-          {/* Update Diet Button */}
-          <div className="flex justify-center mt-6">
-            <button
-              type="submit"
-              className="py-2 px-6 bg-teal text-white rounded-full font-playfair shadow-md hover:bg-dark_teal"
-            >
-              Update Diets
-            </button>
-          </div>
-        </form>
+        <ConditionSelector
+          onSelectConditions={setSelectedDiets}
+          initialSelectedConditions={selectedDiets}
+          isEditMode={true}
+        />
+
+        {/* Update Diet Button */}
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={handleUpdateDiets}
+            className="py-2 px-6 bg-teal text-white rounded-full font-playfair shadow-md hover:bg-dark_teal"
+          >
+            Update Diets
+          </button>
+        </div>
       </div>
 
       {/* Footer */}
