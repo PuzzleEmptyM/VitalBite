@@ -93,13 +93,13 @@ export const GET = async (req: Request) => {
 export const POST = async (req: Request) => {
   console.log("Request Headers:", req.headers);
   try {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    console.log("Token in API route:", token);
+    const { searchParams } = new URL(req.url);
+    const uid = searchParams.get("uid");
 
-    // Ensure the user is authenticated
-    if (!token) {
-      console.error("No token found in API route");
-      return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+    // Validate UID
+    if (!uid) {
+      console.error("UID not provided");
+      return NextResponse.json({ error: "UID is required" }, { status: 400 });
     }
 
     const { diets } = await req.json();
@@ -109,14 +109,12 @@ export const POST = async (req: Request) => {
       return NextResponse.json({ error: "Invalid diets data" }, { status: 400 });
     }
 
-    const userId = token.uid;
-
     // Delete existing preferences for the user before adding new ones
     const deleteQuery = `
       DELETE FROM "userpreference"
       WHERE "uid" = $1
     `;
-    await runSQL(deleteQuery, [userId]);
+    await runSQL(deleteQuery, [uid]);
 
     // Insert the new preferences into the database
     if (diets.length > 0) {
@@ -124,7 +122,7 @@ export const POST = async (req: Request) => {
         INSERT INTO "userpreference" ("uid", "dietId")
         VALUES ${diets.map((_, index) => `($1, $${index + 2})`).join(", ")}
       `;
-      const params = [userId, ...diets];
+      const params = [uid, ...diets];
       await runSQL(insertQuery, params);
     }
 
@@ -140,7 +138,6 @@ export const POST = async (req: Request) => {
     );
   }
 };
-
 
 // --------------------------------------------
 // API ROUTE TO DELETE DIET PREFERENCE FOR A SPECIFIC UID AND DIETID
@@ -158,13 +155,6 @@ export const POST = async (req: Request) => {
 export const DELETE = async (req: Request) => {
   console.log("Request Headers:", req.headers);
   try {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-
-    // Ensure the user is authenticated
-    if (!token) {
-      return NextResponse.json({ error: "Not authorized" }, { status: 401 });
-    }
-
     const { searchParams } = new URL(req.url);
     const uid = searchParams.get("uid");
     const dietId = searchParams.get("dietId");

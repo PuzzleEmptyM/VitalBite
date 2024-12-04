@@ -2,7 +2,6 @@
 
 import ConditionSelector from "@/components/ConditionSelector";
 import FooterNavigation from "@/components/FooterNavigation";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import { useSession } from "next-auth/react";
@@ -13,13 +12,6 @@ export default function EditDietPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
-  }, [status, router]);
-
   // Load existing user diets when the page loads
   useEffect(() => {
     const fetchUserDiets = async () => {
@@ -29,17 +21,20 @@ export default function EditDietPage() {
           return;
         }
 
-        const response = await axios.get(`../api/preferences`, {
-          params: { uid: session.user.id },
+        // Make a GET request to fetch user preferences
+        const response = await fetch(`/api/preferences?uid=${session.user.id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
 
-        if (response.status === 200) {
-          const dietIds = response.data.map(
-            (diet: { dietId: number }) => diet.dietId
-          );
+        if (response.ok) {
+          const data = await response.json();
+          const dietIds = data.map((diet: { dietId: number }) => diet.dietId);
           setSelectedDiets(dietIds);
         } else {
-          alert("Failed to load diets. Please try again.");
+          console.error("Failed to load diets:", response.statusText);
         }
       } catch (error) {
         console.error("Error fetching diets:", error);
@@ -60,18 +55,21 @@ export default function EditDietPage() {
         return;
       }
 
-      const response = await axios.post(`/api/preferences`, 
-        {
-          uid: session.user.id, diets: selectedDiets,
-        }, 
-        {
-          headers: { Authorization: `Bearer ${session?.user?.token}` },
-        }
-      );
+      // Make a POST request to update user preferences
+      const response = await fetch(`/api/preferences?uid=${session.user.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          diets: selectedDiets,
+        }),
+      });
 
-      if (response.status === 201) {
+      if (response.ok) {
         alert("Diets updated successfully!");
       } else {
+        console.error("Failed to update diets:", response.statusText);
         alert("Failed to update diets. Please try again.");
       }
     } catch (error) {
@@ -118,7 +116,7 @@ export default function EditDietPage() {
             initialSelectedConditions={selectedDiets}
             isEditMode={true}
           />
-          
+
           {/* Update Diet Button */}
           <div className="flex justify-center mt-6">
             <button
