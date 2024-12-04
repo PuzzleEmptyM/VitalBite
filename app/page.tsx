@@ -125,18 +125,19 @@ const Page = () => {
           />
         </div>
           <div className="w-full text-left ml-4">
-            <h3 className="text-xl font-bold text-forest_green">
-              Understand Your Condition
+            <h3 className="text-lg font-bold text-forest_green">
+            AI Chatbot
             </h3>
             <p className="text-sm text-forest_green mt-2 font-semibold">
-              Get clear, reliable information about your medical condition(s) to
-              make informed decisions about your health and lifestyle
+            Chat with our AI assistant to get personalized recipes, meal
+            suggestions, and lifestyle tips tailored to your health needs. Your
+            questions, answered instantly and effortlessly!
             </p>
             <button
               className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
-                      onClick={() => router.push("/condition")}
+                      onClick={() => router.push("/aichatbot")}
             >
-              Learn More
+              Try Now
             </button>
           </div>
       </section>
