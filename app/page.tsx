@@ -120,7 +120,7 @@ const Page = () => {
           <img
             src="/images/tomato.png"
             alt="AI Chatbot"
-            className="w-auto h-auto max-w-none mb-2 ml-[-50]"
+            className="w-auto h-auto max-w-none mb-2 ml-[-60]"
             style={{ width: '200px' }}
           />
         </div>
@@ -133,7 +133,7 @@ const Page = () => {
             questions, answered instantly and effortlessly!
           </p>
           <button
-            className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
+            className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md ml-[-60]"
             onClick={() => router.push("/aichatbot")}
           >
             Try Now
