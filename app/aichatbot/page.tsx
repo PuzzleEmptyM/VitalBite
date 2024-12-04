@@ -90,9 +90,8 @@ const Page = () => {
                       : "bg-white text-forest_green"
                   } font-playfair shadow-md`}
                   style={{ maxWidth: "75%" }}
-                >
-                  {message.text}
-                </div>
+                  dangerouslySetInnerHTML={{ __html: message.text.replace(/\n/g, "<br>") }}
+                ></div>
                 {message.type === "user" && (
                   <div className="ml-2 bg-forest_green text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
                     {userInitials}
