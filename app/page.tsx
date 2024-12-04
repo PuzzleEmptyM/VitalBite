@@ -105,7 +105,7 @@ const Page = () => {
         >
           <img
             src="/images/spoon.png"
-            alt="Ingredient Analyzer"
+            alt="Food Analyzer"
             className="w-25 h-25 mb-2"
           />
           <h4 className="text-forest_green font-playfair font-semibold border-b-2 border-forest_green mb-2">
@@ -114,32 +114,33 @@ const Page = () => {
         </div>
       </section>
 
-      {/* AI Chatbot Section */}
-      <section className="mt-6 bg-white p-4 rounded-lg font-playfair flex items-center">
-        <div className="w-1/3 pr-6 pl-0">
+       {/* AI Chatbot Section */}
+       <section className="rounded-lg font-playfair flex items-center">
+        {/* Image Section */}
+        <div className="w-80 h-80 flex items-start justify-start mb-2 mt-20">
           <img
             src="/images/tomato.png"
             alt="AI Chatbot"
-            className="w-auto h-auto max-w-none mb-2 ml-[-50]"
+            className="w-[225px] h-[235]"
           />
         </div>
-
-        <div className="w-full text-left ml-8">
-          <h3 className="text-lg font-bold text-forest_green">AI Chatbot</h3>
-          <p className="text-sm text-forest_green mt-2 font-semibold">
+          <div className="w-full text-left p-4 ml-4 mt-8">
+            <h3 className="text-lg font-bold text-forest_green">
+            AI Chatbot
+            </h3>
+            <p className="text-sm text-forest_green mt-2 font-semibold">
             Chat with our AI assistant to get personalized recipes, meal
             suggestions, and lifestyle tips tailored to your health needs. Your
             questions, answered instantly and effortlessly!
-          </p>
-          <button
-            className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
-            onClick={() => router.push("/aichatbot")}
-          >
-            Try Now
-          </button>
-        </div>
+            </p>
+            <button
+              className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
+                      onClick={() => router.push("/aichatbot")}
+            >
+              Try Now
+            </button>
+          </div>
       </section>
-
       <div className="mb-12">
         <FooterNavigation />
       </div>

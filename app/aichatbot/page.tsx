@@ -65,10 +65,9 @@ const Page = () => {
         </h2>
 
         {/* Chat Area */}
-        <div className="bg-mint w-full max-w-md rounded-lg shadow-lg p-4 flex flex-col justify-between min-h-[70vh]">
+        <div className="bg-mint w-full max-w-md rounded-lg shadow-lg p-4 flex flex-col justify-between h-[70vh]">
           {/* Chat Bubbles */}
           <div className="flex flex-col space-y-4 flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-forest_green scrollbar-track-transparent"
-          style={{ maxHeight: "50vh" }}
           >
             {messages.map((message, index) => (
               <div
@@ -91,9 +90,8 @@ const Page = () => {
                       : "bg-white text-forest_green"
                   } font-playfair shadow-md`}
                   style={{ maxWidth: "75%" }}
-                >
-                  {message.text}
-                </div>
+                  dangerouslySetInnerHTML={{ __html: message.text.replace(/\n/g, "<br>") }}
+                ></div>
                 {message.type === "user" && (
                   <div className="ml-2 bg-forest_green text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
                     {userInitials}
