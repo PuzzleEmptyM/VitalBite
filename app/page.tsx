@@ -114,33 +114,30 @@ const Page = () => {
         </div>
       </section>
 
-      {/* AI Chatbot Section */}
-      <section className="mt-6 p-4 rounded-lg font-playfair flex items-center">
-        {/* Image Section */}
-        <div className="flex-shrink-0 w-[150px] h-[150px] mr-6">
+       {/* AI Chatbot Section */}
+       <section className="mt-6 bg-white p-4 rounded-lg font-playfair flex items-center">
+        <div className="w-1/3 pr-6 pl-0">
           <img
             src="/images/tomato.png"
             alt="AI Chatbot"
-            className="w-full h-full object-contain"
+            className="w-auto h-auto max-w-none mb-2 ml-[-50]"
+            style={{ width: '200px' }}
           />
         </div>
 
-        {/* Text Section */}
-        <div className="flex-grow">
+        <div className="w-full text-left ml-6">
           <h3 className="text-lg font-bold text-forest_green">AI Chatbot</h3>
           <p className="text-sm text-forest_green mt-2 font-semibold">
-            Chat with our AI assistant to get personalized recipes, meal suggestions,
-            and lifestyle tips tailored to your health needs. Your questions,
-            answered instantly and effortlessly!
+            Chat with our AI assistant to get personalized recipes, meal
+            suggestions, and lifestyle tips tailored to your health needs. Your
+            questions, answered instantly and effortlessly!
           </p>
-          <div className="justify-items-center">
           <button
             className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
             onClick={() => router.push("/aichatbot")}
           >
             Try Now
           </button>
-          </div>
         </div>
       </section>
 
