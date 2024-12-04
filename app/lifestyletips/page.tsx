@@ -9,13 +9,16 @@ const LifestyleTipsPage: React.FC = () => {
   const { data: session } = useSession(); // Get session data
   const [tips, setTips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true); // Adding loading state for better UX
+  const [expandedTipId, setExpandedTipId] = useState<number | null>(null); // Track expanded tip
 
   useEffect(() => {
     const fetchTips = async () => {
       if (session?.user?.id) {
         try {
           setLoading(true); // Start loading when fetching
-          const response = await fetch(`/api/lifestyletips?uid=${session.user.id}`);
+          const response = await fetch(
+            `/api/lifestyletips?uid=${session.user.id}`
+          );
           const data = await response.json();
 
           // Ensure data is an array before setting tips
@@ -38,8 +41,16 @@ const LifestyleTipsPage: React.FC = () => {
 
   // Sort tips by timestamp in descending order
   const sortedTips = tips
-    ? [...tips].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    ? [...tips].sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      )
     : [];
+
+  // Handle card click
+  const handleCardClick = (tipId: number) => {
+    setExpandedTipId(tipId === expandedTipId ? null : tipId); // Toggle expansion
+  };
 
   return (
     <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
@@ -56,7 +67,9 @@ const LifestyleTipsPage: React.FC = () => {
             alignItems: "center",
           }}
         />
-        <h1 className="text-xl font-bold text-center text-forest_green mb-6 font-playfair">Lifestyle Tips</h1>
+        <h1 className="text-xl font-bold text-center text-forest_green mb-6 font-playfair">
+          Lifestyle Tips
+        </h1>
 
         {loading ? (
           <p>Loading...</p> // Display loading state
@@ -66,24 +79,42 @@ const LifestyleTipsPage: React.FC = () => {
           sortedTips.map((tip, index) => (
             <div
               key={index}
-              className="bg-mint rounded-3xl shadow-md border border-forest_green p-4 w-full max-w-lg mb-4"
+              className={`bg-mint rounded-3xl shadow-md border border-forest_green p-4 w-full max-w-lg mb-4 transition-all duration-300 ${
+                expandedTipId === tip.tipId ? "h-auto" : "overflow-hidden h-24"
+              }`}
             >
               {/* Summary at the top in bold */}
-              {tip.summary && (
-                <p className="font-semibold text-lg text-forest_green mb-4 text-center">
-                  {tip.summary}
-                </p>
+              <p
+                className="font-semibold text-lg text-forest_green mb-4 text-center cursor-pointer"
+                onClick={() => handleCardClick(tip.tipId)}
+              >
+                {tip.summary.replace(/\.$/, "")}
+              </p>
+
+              {/* Expanded content (only visible if expanded) */}
+              {expandedTipId === tip.tipId && (
+                <div>
+                  <p className="text-base text-center font-playfair text-forest_green mb-4">
+                    {tip.tip}
+                  </p>
+                  <div className="flex justify-center mt-4">
+                    <button
+                      className="bg-mint text-forest_green px-4 py-2 font-bold font-playfair rounded-full shadow-md border-2 border-forest_green"
+                      onClick={() => setExpandedTipId(null)}
+                    >
+                      Minimize
+                    </button>
+                  </div>
+                </div>
               )}
 
-              {/* Tip content in the middle */}
-              <p className="text-base text-center font-playfair text-forest_green mb-4">
-                {tip.tip}
-              </p>
-
-              {/* Tip number at the bottom in smaller italic font */}
-              <p className="text-sm text-gray-600 text-right italic">
-                Tip #{index + 1}
-              </p>
+              {/* Tip number and date at the bottom */}
+              <div className="flex justify-between items-center mt-4">
+                <p className="text-sm text-gray-600 italic">Tip #{index + 1}</p>
+                <p className="text-sm text-gray-600 italic">
+                  {new Date(tip.timestamp).toLocaleDateString()}
+                </p>
+              </div>
             </div>
           ))
         )}
