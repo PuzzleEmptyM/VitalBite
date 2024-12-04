@@ -68,3 +68,45 @@ export const GET = async (req: Request) => {
     );
   }
 };
+
+// API route to delete a recipe by RID and UID
+export const DELETE = async (req: Request) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const uid = searchParams.get("uid");
+    const rid = searchParams.get("rid"); // Get 'rid' from query params
+
+    if (!uid) {
+      return NextResponse.json({ error: "UID is required" }, { status: 400 });
+    }
+    if (!rid) {
+      return NextResponse.json({ error: "Recipe ID (rid) is required" }, { status: 400 });
+    }
+
+    // Verify that the recipe belongs to the user
+    const verifyQuery = `
+      SELECT * FROM "recipe"
+      WHERE "recipeId" = $1 AND "uid" = $2
+    `;
+    const verifyResult = await runSQL(verifyQuery, [parseInt(rid, 10), uid]);
+
+    if (verifyResult.rows.length === 0) {
+      return NextResponse.json(
+        { error: "Recipe not found or access denied" },
+        { status: 404 }
+      );
+    }
+
+    // Delete the recipe
+    const deleteQuery = `
+      DELETE FROM "recipe"
+      WHERE "recipeId" = $1 AND "uid" = $2
+    `;
+    await runSQL(deleteQuery, [rid, uid]);
+
+    return NextResponse.json({ message: "Recipe deleted successfully" }, { status: 200 });
+  } catch (error) {
+    console.error("Error deleting recipe:", error);
+    return NextResponse.json({ error: "Failed to delete recipe" }, { status: 500 });
+  }
+};

@@ -37,6 +37,12 @@ const RecipePage: React.FC = () => {
     if (session?.user?.id) fetchRecipes();
   }, [session?.user?.id]); // Only refetch when the session id changes
 
+  const handleDeleteRecipe = (recipeId: number) => {
+    setRecipes((prevRecipes) =>
+      prevRecipes.filter((recipe) => recipe.recipeId !== recipeId)
+    );
+  };
+
   // Sort recipes after they've been fetched
   const sortedRecipes = recipes ? [...recipes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) : [];
 
@@ -57,12 +63,22 @@ const RecipePage: React.FC = () => {
         <h1 className="text-xl font-bold text-center text-forest_green mb-2 font-playfair">Saved Recipes</h1>
 
         {loading ? (
-          <p>Loading...</p> // Display loading state
+          <p>Loading...</p>
         ) : sortedRecipes.length === 0 ? (
           <p>No recipes saved yet. Start adding some!</p>
         ) : (
           sortedRecipes.map((recipe, index) => (
-            <RecipeCard key={index} {...recipe} />
+            <RecipeCard
+              key={recipe.recipeId}
+              recipeId={recipe.recipeId}
+              prepTime={recipe.prepTime}
+              timestamp={recipe.timestamp}
+              recipeName={recipe.recipeName}
+              ingredients={recipe.ingredients}
+              instructions={recipe.instructions}
+              onDelete={handleDeleteRecipe}
+              uid={session?.user?.id || ""}
+            />
           ))
         )}
       </main>
