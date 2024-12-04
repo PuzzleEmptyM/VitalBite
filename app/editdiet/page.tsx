@@ -52,27 +52,17 @@ export default function EditDietPage() {
   // Handles updating the user's diets
   const handleUpdateDiets = async () => {
     try {
-      if (!session?.user?.id) {
-        console.error("UID not provided");
-        return;
-      }
-  
       const csrfToken = await getCsrfToken();
   
-      const response = await axios.post(
-        "/api/preferences",
-        {
-          uid: session.user.id,
-          diets: selectedDiets,
+      const response = await fetch("/api/preferences", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "CSRF-Token": csrfToken,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "CSRF-Token": csrfToken,
-          },
-          withCredentials: true, // Include cookies in the request
-        }
-      );
+        credentials: "include", // Include cookies
+        body: JSON.stringify({ diets: selectedDiets }),
+      });
   
       if (response.status === 201) {
         alert("Diets updated successfully!");
@@ -80,7 +70,7 @@ export default function EditDietPage() {
         alert("Failed to update diets. Please try again.");
       }
     } catch (error) {
-      console.error("Update diets error:", error.response?.data || error.message);
+      console.error("Update diets error:", error);
       alert("An unexpected error occurred. Please try again.");
     }
   };

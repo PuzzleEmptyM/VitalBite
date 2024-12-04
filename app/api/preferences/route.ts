@@ -94,9 +94,11 @@ export const POST = async (req: Request) => {
   console.log("Request Headers:", req.headers);
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    console.log("Token in API route:", token);
 
     // Ensure the user is authenticated
     if (!token) {
+      console.error("No token found in API route");
       return NextResponse.json({ error: "Not authorized" }, { status: 401 });
     }
 
@@ -131,7 +133,7 @@ export const POST = async (req: Request) => {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error saving preferences:", error);
+    console.error("Error in API route:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
