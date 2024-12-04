@@ -115,8 +115,8 @@ const Page = () => {
       </section>
 
        {/* AI Chatbot Section */}
-       <section className="mt-6 bg-white p-4 rounded-lg font-playfair flex items-center">
-        <div className="w-1/3 pr-6 pl-0">
+       <section className="mt-6 bg-white p-4 rounded-lg font-playfair flex items-center flex-shrink">
+        <div className="w-1/3 pr-6 pl-0 flex-shrink">
           <img
             src="/images/tomato.png"
             alt="AI Chatbot"
