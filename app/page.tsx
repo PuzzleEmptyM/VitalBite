@@ -124,7 +124,7 @@ const Page = () => {
             className="w-[225px] h-[235]"
           />
         </div>
-          <div className="w-full text-left ml-4">
+          <div className="w-full text-left p-4 ml-4 mt-8">
             <h3 className="text-lg font-bold text-forest_green">
             AI Chatbot
             </h3>
