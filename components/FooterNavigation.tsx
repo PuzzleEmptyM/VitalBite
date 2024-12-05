@@ -6,7 +6,7 @@ export default function FooterNavigation() {
     return (
         <>
             {/* Bottom Navigation */}
-            <nav className="fixed bottom-0 left-0 right-0 bg-cream flex justify-around py-2 pb-6 shadow-md border-2 border-forest_green">
+            <nav className="fixed bottom-0 left-0 right-0 bg-cream flex justify-around py-2 pb-8 shadow-md border-2 border-forest_green">
                 {/* Chatbot Button */}
                 <button onClick={() => router.push("/aichatbot")}>
                     <img src="/icons/chat.svg" alt="Chat" className="w-8 h-8" />
