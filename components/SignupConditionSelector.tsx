@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 // Define the conditions and their corresponding diet IDs
 const conditions = [
@@ -12,29 +12,22 @@ const conditions = [
 
 interface ConditionSelectorProps {
   onSelectConditions: (selectedDiets: number[]) => void;
-  initialSelectedConditions?: number[];
-  isEditMode?: boolean;
 }
 
-const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectConditions, initialSelectedConditions = [], isEditMode = false }) => {
-  const [selectedConditions, setSelectedConditions] = useState<number[]>(initialSelectedConditions);
-
-  // Set initial selected conditions when the component mounts or when initialSelectedConditions change
-  useEffect(() => {
-    setSelectedConditions(initialSelectedConditions);
-  }, [initialSelectedConditions]);
+const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectConditions }) => {
+  const [selectedConditions, setSelectedConditions] = useState<number[]>([]);
 
   // Function to handle selecting or deselecting a condition
   const handleConditionClick = (dietId: number) => {
     setSelectedConditions((prevSelected) =>
       prevSelected.includes(dietId)
-        ? prevSelected.filter((item) => item !== dietId)
-        : [...prevSelected, dietId]
+        ? prevSelected.filter((item) => item !== dietId) // Remove if already selected
+        : [...prevSelected, dietId]                      // Add if not already selected
     );
   };
 
   // Pass the selected diet IDs to the parent component whenever they change
-  useEffect(() => {
+  React.useEffect(() => {
     onSelectConditions(selectedConditions);
   }, [selectedConditions, onSelectConditions]);
 
@@ -44,10 +37,10 @@ const ConditionSelector: React.FC<ConditionSelectorProps> = ({ onSelectCondition
         <button
           key={condition.dietId}
           type="button"
-          className={`py-2 px-2 border border-gray-300 shadow-md text-teal font-playfair font-normal rounded-md hover:bg-mint hover:text-white ${
-            selectedConditions.includes(condition.dietId) ? "bg-mint text-white" : ""
+          className={`py-2 px-4 border border-gray-300 shadow-md text-teal font-playfair font-normal rounded-md hover:bg-forest_green hover:text-white ${
+            selectedConditions.includes(condition.dietId) ? "bg-forest_green text-white" : ""
           }`}
-          onPointerUp={() => handleConditionClick(condition.dietId)}
+          onClick={() => handleConditionClick(condition.dietId)}
         >
           {condition.name}
         </button>

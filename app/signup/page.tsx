@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "../../components/InputField";
 import GetStartedButton from "../../components/GetStartedButton";
-import ConditionSelector from "../../components/ConditionSelector";
 import Link from "next/link";
 import axios from "axios";
 import DisclaimerFooter from "@/components/DisclaimerFooter";
+import SignupConditionSelector from "../../components/SignupConditionSelector";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -90,7 +90,7 @@ export default function SignUpPage() {
               Please select your <br /> medical condition(s)
             </h2>
           </div>
-          <ConditionSelector onSelectConditions={setSelectedDiets} /> {/* Pass correct prop name */}
+          <SignupConditionSelector onSelectConditions={setSelectedDiets} /> {/* Pass correct prop name */}
 
           {/* Get Started Button */}
           <GetStartedButton text="Get Started" />
