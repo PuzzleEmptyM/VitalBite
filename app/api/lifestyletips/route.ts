@@ -1,16 +1,13 @@
 import { NextResponse } from "next/server";
 import { Pool } from "pg";
 
-// Connection pool for Vercel PostgreSQL database
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
   ssl: { rejectUnauthorized: false },
 });
 
-// Function to execute SQL queries
 async function runSQL(query: string, params: any[] = []) {
   const client = await pool.connect();
-  console.log("Connected to the database");
 
   try {
     const result = await client.query(query, params);
@@ -23,7 +20,7 @@ async function runSQL(query: string, params: any[] = []) {
   }
 }
 
-// API route to fetch lifestyle tips for the logged-in user
+// API route to fetch or delete lifestyle tips
 export const GET = async (req: Request) => {
   try {
     const { searchParams } = new URL(req.url);
@@ -34,7 +31,6 @@ export const GET = async (req: Request) => {
       return NextResponse.json({ error: "UID is required" }, { status: 400 });
     }
 
-    // Fetch lifestyle tips associated with the user
     const tipsQuery = `
       SELECT 
         "tipId", 
@@ -59,6 +55,39 @@ export const GET = async (req: Request) => {
     console.error("Error fetching lifestyle tips:", error);
     return NextResponse.json(
       { error: "Failed to fetch lifestyle tips" },
+      { status: 500 }
+    );
+  }
+};
+
+export const DELETE = async (req: Request) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const tipId = searchParams.get("tipId");
+
+    if (!tipId) {
+      console.error("Tip ID not provided");
+      return NextResponse.json({ error: "Tip ID is required" }, { status: 400 });
+    }
+
+    const deleteQuery = `
+      DELETE FROM "tip"
+      WHERE "tipId" = $1
+    `;
+    const result = await runSQL(deleteQuery, [tipId]);
+
+    if (result.rowCount === 0) {
+      return NextResponse.json(
+        { message: "No tip found with the provided ID" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ message: "Tip deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting tip:", error);
+    return NextResponse.json(
+      { error: "Failed to delete the tip" },
       { status: 500 }
     );
   }
