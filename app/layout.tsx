@@ -23,7 +23,7 @@ export default function RootLayout({ children }: Props) {
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
 
         {/* Theme color for browser UI */}
-        <meta name="theme-color" content="#1ED2AF" />
+        <meta name="theme-color" content="#40938C" />
       </head>
       <body className={`antialiased bg-[#ffff] text-black`}>
         <SessionProvider>{children}</SessionProvider>
