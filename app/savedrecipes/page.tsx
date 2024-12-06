@@ -1,8 +1,11 @@
+// RecipePage.tsx updated to integrate the SearchBar component and implement search functionality.
+
 "use client";
 
 import { useSession } from "next-auth/react";
 import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
+import SearchBar from "@/components/SearchBar";
 import { useEffect, useState } from "react";
 import RecipeCard from "@/components/RecipeCard";
 
@@ -10,6 +13,7 @@ const RecipePage: React.FC = () => {
   const { data: session } = useSession();
   const [recipes, setRecipes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -43,9 +47,25 @@ const RecipePage: React.FC = () => {
     );
   };
 
+  // Function to handle search
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  // Filter recipes based on the search query
+  const filteredRecipes = recipes.filter((recipe) => {
+    const ingredientsString = Array.isArray(recipe.ingredients) ? recipe.ingredients.join(" ") : recipe.ingredients;
+    const instructionsString = Array.isArray(recipe.instructions) ? recipe.instructions.join(" ") : recipe.instructions;
+    return (
+      recipe.recipeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ingredientsString.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      instructionsString.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+
   // Sort recipes after they've been fetched
-  const sortedRecipes = recipes
-    ? [...recipes].sort(
+  const sortedRecipes = filteredRecipes
+    ? [...filteredRecipes].sort(
         (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       )
     : [];
@@ -68,6 +88,8 @@ const RecipePage: React.FC = () => {
         <h1 className="text-xl font-bold text-center text-forest_green mb-6 font-playfair">
           My Recipes
         </h1>
+
+        <SearchBar placeholder="Search Recipes..." onSearch={handleSearch} />
 
         {loading ? (
           <p>Loading...</p>
