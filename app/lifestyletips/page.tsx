@@ -1,93 +1,118 @@
+// pages/LifestyleTipsPage.tsx
+
 "use client";
 
 import { useSession } from "next-auth/react";
 import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
 import { useEffect, useState } from "react";
+import LifestyleTipCard from "@/components/LifestyleTipCard";
+import SearchBar from "@/components/SearchBar"; // Import the SearchBar component
 
 const LifestyleTipsPage: React.FC = () => {
-  const { data: session } = useSession(); // Get session data
+  const { data: session } = useSession();
   const [tips, setTips] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true); // Adding loading state for better UX
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchTips = async () => {
       if (session?.user?.id) {
         try {
-          setLoading(true); // Start loading when fetching
+          setLoading(true);
           const response = await fetch(`/api/lifestyletips?uid=${session.user.id}`);
           const data = await response.json();
 
-          // Ensure data is an array before setting tips
           if (Array.isArray(data)) {
             setTips(data);
           } else {
-            setTips([]); // Handle unexpected data format
+            setTips([]);
           }
         } catch (error) {
           console.error("Error fetching lifestyle tips:", error);
-          setTips([]); // Set empty array in case of an error
+          setTips([]);
         } finally {
-          setLoading(false); // Stop loading
+          setLoading(false);
         }
       }
     };
 
     if (session?.user?.id) fetchTips();
-  }, [session?.user?.id]); // Only refetch when the session id changes
+  }, [session?.user?.id]);
 
-  // Sort tips by timestamp in descending order
+  const handleDeleteTip = (tipId: number) => {
+    setTips((prevTips) => prevTips.filter((tip) => tip.tipId !== tipId));
+  };
+
+  // Function to handle search
+  const handleSearch = (query: string) => {
+    setSearchQuery(query.toLowerCase());
+  };
+
+  // Function to filter tips based on search query
+  const filterTips = (tips: any[]) => {
+    if (!searchQuery) return tips;
+    return tips.filter(
+      (tip) =>
+        tip.summary.toLowerCase().includes(searchQuery) ||
+        tip.tip.toLowerCase().includes(searchQuery)
+    );
+  };
+
   const sortedTips = tips
-    ? [...tips].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    ? [...tips].sort(
+        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      )
     : [];
+
+  const filteredTips = filterTips(sortedTips);
 
   return (
     <div className="flex flex-col min-h-screen px-4 bg-white p-4 font-sans">
+      {/* Header Section */}
       <Header />
 
-      <main className="flex-grow flex flex-col items-center mb-12">
-        <img
-          src="/images/branch.png"
-          alt="Branch image"
-          className="w-60 h-60"
-          style={{
-            marginTop: "-45px",
-            marginBottom: "-15px",
-            alignItems: "center",
-          }}
-        />
-        <h1 className="text-xl font-bold text-center text-forest_green mb-6 font-playfair">Lifestyle Tips</h1>
+      {/* Branch Icon at the Top */}
+      <section>
+        <div className="w-60 h-60 flex items-center justify-center mx-auto">
+          <img src="/images/branch.png" alt="Branch image" className="w-50 h-50" />
+        </div>
+      </section>
 
+      {/* Main Content */}
+      <main className="flex-grow flex flex-col items-center mt-0 mb-12">
+        {/* Page Title */}
+        <h1 className="text-xl font-bold text-center text-forest_green mb-6 font-playfair">
+          Lifestyle Tips
+        </h1>
+
+        {/* Search Bar */}
+        <SearchBar
+          placeholder="Search Lifestyle Tips..."
+          onSearch={handleSearch}
+        />
+
+        {/* Tips Content */}
         {loading ? (
-          <p>Loading...</p> // Display loading state
-        ) : sortedTips.length === 0 ? (
+          <p>Loading...</p>
+        ) : filteredTips.length === 0 ? (
           <p>No lifestyle tips available yet. Check back soon!</p>
         ) : (
-          sortedTips.map((tip, index) => (
-            <div
-              key={index}
-              className="bg-mint rounded-3xl shadow-md border border-forest_green p-4 w-full max-w-lg mb-4"
-            >
-              {/* Summary at the top in bold */}
-              {tip.summary && (
-                <p className="font-semibold text-lg text-forest_green mb-4 text-center">
-                  {tip.summary}
-                </p>
-              )}
-
-              {/* Tip content in the middle */}
-              <p className="text-base text-center font-playfair text-forest_green mb-4">
-                {tip.tip}
-              </p>
-
-              {/* Tip number at the bottom in smaller italic font */}
-              <p className="text-sm text-gray-600 text-right italic">
-                Tip #{index + 1}
-              </p>
-            </div>
+          filteredTips.map((tip) => (
+            <LifestyleTipCard
+              key={tip.tipId}
+              tipId={tip.tipId}
+              timestamp={tip.timestamp}
+              summary={tip.summary}
+              tip={tip.tip}
+              onDelete={handleDeleteTip}
+              uid={session?.user?.id || ""}
+            />
           ))
         )}
       </main>
+
+      {/* Footer */}
       <FooterNavigation />
     </div>
   );

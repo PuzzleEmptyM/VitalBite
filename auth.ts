@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { compare } from "bcryptjs";
 
 const prisma = new PrismaClient();
+const isProduction = process.env.NODE_ENV === "production";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   theme: {
@@ -21,7 +22,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           scope: "openid profile email https://www.googleapis.com/auth/userinfo.profile",
         },
       },
-      checks: [], // remove PKCE
+      checks: [],
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -58,7 +59,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         console.log("User authenticated successfully:", user.email);
         return {
-          id: user.uid, // `uid` should be treated as a string (UUID)
+          id: user.uid, // uid should be treated as a string (UUID)
           email: user.email,
           name: user.username,
         };
@@ -73,13 +74,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       console.log("JWT callback triggered");
       if (user) {
         console.log("User found, adding data to token:", user);
-        token.uid = user.id;  // Ensure `uid` is treated as a string (UUID)
+        token.uid = user.id;  // Ensure uid is treated as a string (UUID)
         token.email = user.email;
         token.name = user.name;
 
         // Check if user exists in database and use their existing uid
         const existingUser = await prisma.user.findUnique({
-          where: { email: user.email },
+          where: { email: user.email || "Unknown" },
         });
 
         if (existingUser) {
@@ -89,7 +90,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // Create a new user if they don't exist, and store their UID in the token
           const newUser = await prisma.user.create({
             data: {
-              email: user.email,
+              email: user.email || "Unknown",
               username: user.name || "Unknown",
             },
           });
@@ -103,7 +104,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       console.log("Session callback triggered");
       if (token?.uid) {
         console.log("Adding user ID to session:", token.uid);
-        session.user.id = token.uid; // `uid` should be treated as a string (UUID)
+        session.user.id = token.uid; // uid should be treated as a string (UUID)
       }
       session.user.email = token.email ?? "";
       session.user.name = token.name ?? "";
@@ -114,6 +115,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async redirect({ url, baseUrl }) {
       console.log("Redirect callback triggered, base URL:", baseUrl);
       return baseUrl;
+    },
+  },
+
+  cookies: {
+    sessionToken: {
+      name: `${isProduction ? "__Secure-" : ""}auth_session`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: isProduction,
+      },
     },
   },
 

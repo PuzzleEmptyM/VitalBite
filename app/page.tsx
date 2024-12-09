@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
 
+const clickLinktree = () => {
+  window.open('https://linktr.ee/vitalbite', '_blank', 'noopener,noreferrer');
+};
+
 const Page = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -109,37 +113,66 @@ const Page = () => {
             className="w-25 h-25 mb-2"
           />
           <h4 className="text-forest_green font-playfair font-semibold border-b-2 border-forest_green mb-2">
-            Ingredient Analyzer
+            Food Analyzer
           </h4>
         </div>
       </section>
 
-      {/* AI Chatbot Section */}
-      <section className="mt-6 bg-white p-4 rounded-lg font-playfair flex items-center">
-        <div className="w-1/3 pr-6 pl-0">
+       {/* AI Chatbot Section */}
+       <section className="rounded-lg font-playfair flex items-center h-80">
+        {/* Image Section */}
+        <div className="w-80 h-80 flex items-start justify-start mb-2 mt-20">
           <img
             src="/images/tomato.png"
             alt="AI Chatbot"
-            className="w-auto h-auto max-w-none mb-2 ml-[-50]"
+            className="w-[225px] h-[235]"
           />
         </div>
-
-        <div className="w-full text-left ml-8">
-          <h3 className="text-lg font-bold text-forest_green">AI Chatbot</h3>
-          <p className="text-sm text-forest_green mt-2 font-semibold">
+          <div className="w-full text-left p-4 ml-4 mt-8">
+            <h3 className="text-lg font-bold text-forest_green">
+            AI Chatbot
+            </h3>
+            <p className="text-sm text-forest_green mt-2 font-semibold">
             Chat with our AI assistant to get personalized recipes, meal
             suggestions, and lifestyle tips tailored to your health needs. Your
             questions, answered instantly and effortlessly!
-          </p>
-          <button
-            className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
-            onClick={() => router.push("/aichatbot")}
-          >
-            Try Now
-          </button>
-        </div>
-      </section>
+            </p>
+            <button
+              className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
+                      onClick={() => router.push("/aichatbot")}
+            >
+              Try Now
+            </button>
+          </div>
+        </section>
 
+        {/* Contact Link section */}
+        <section className="rounded-lg font-playfair flex items-center h-80">
+        {/* Image Section */}
+
+          <div className="w-full text-right p-4 ml-4">
+            <h3 className="text-lg font-bold text-forest_green">
+            Contact Us!
+            </h3>
+            <p className="text-sm text-forest_green mt-2 font-semibold">
+            Visit our Linktree to get in contact with the developers of this project. 
+            Each of the developers' LinkedIn and Github accounts are listed for your convenience.
+            </p>
+            <button
+              className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
+                      onClick={clickLinktree}
+            >
+              Contact
+            </button>
+          </div>
+          <div className="w-80 h-80 flex items-start justify-start mb-2 mt-10">
+          <img
+            src="/images/salad.png"
+            alt="Salad hello wave"
+            className="w-[225px] h-[235]"
+          />
+        </div>
+        </section>
       <div className="mb-12">
         <FooterNavigation />
       </div>
