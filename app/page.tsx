@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import FooterNavigation from "@/components/FooterNavigation";
 import Header from "@/components/Header";
 
+const clickLinktree = () => {
+  window.open('https://linktr.ee/vitalbite', '_blank', 'noopener,noreferrer');
+};
+
 const Page = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -140,7 +144,35 @@ const Page = () => {
               Try Now
             </button>
           </div>
-      </section>
+        </section>
+
+        {/* Contact Link section */}
+        <section className="rounded-lg font-playfair flex items-center">
+        {/* Image Section */}
+
+          <div className="w-full text-left p-4 ml-4 mt-8">
+            <h3 className="text-lg font-bold text-forest_green">
+            Contact Us!
+            </h3>
+            <p className="text-sm text-forest_green mt-2 font-semibold">
+            Visit our Linktree to get in contact with the developers of this project. 
+            Each of the developers' LinkedIn and Github accounts are listed for your convenience.
+            </p>
+            <button
+              className="mt-4 bg-teal text-white px-4 py-2 rounded-full border-2 border-forest_green w-40 shadow-md"
+                      onClick={clickLinktree}
+            >
+              Contact
+            </button>
+          </div>
+          <div className="w-80 h-80 flex items-start justify-start mb-2 mt-20">
+          <img
+            src="/images/salad.png"
+            alt="Salad hello wave"
+            className="w-[225px] h-[235]"
+          />
+        </div>
+        </section>
       <div className="mb-12">
         <FooterNavigation />
       </div>
