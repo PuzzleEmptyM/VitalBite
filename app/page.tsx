@@ -119,7 +119,7 @@ const Page = () => {
       </section>
 
        {/* AI Chatbot Section */}
-       <section className="rounded-lg font-playfair flex items-center">
+       <section className="rounded-lg font-playfair flex items-center h-80">
         {/* Image Section */}
         <div className="w-80 h-80 flex items-start justify-start mb-2 mt-20">
           <img
@@ -147,10 +147,10 @@ const Page = () => {
         </section>
 
         {/* Contact Link section */}
-        <section className="rounded-lg font-playfair flex items-center">
+        <section className="rounded-lg font-playfair flex items-center h-80">
         {/* Image Section */}
 
-          <div className="w-full text-left p-4 ml-4 mt-8">
+          <div className="w-full text-right p-4 ml-4">
             <h3 className="text-lg font-bold text-forest_green">
             Contact Us!
             </h3>
@@ -165,7 +165,7 @@ const Page = () => {
               Contact
             </button>
           </div>
-          <div className="w-80 h-80 flex items-start justify-start mb-2 mt-20">
+          <div className="w-80 h-80 flex items-start justify-start mb-2 mt-10">
           <img
             src="/images/salad.png"
             alt="Salad hello wave"
