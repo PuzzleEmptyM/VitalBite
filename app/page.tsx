@@ -109,7 +109,7 @@ const Page = () => {
             className="w-25 h-25 mb-2"
           />
           <h4 className="text-forest_green font-playfair font-semibold border-b-2 border-forest_green mb-2">
-            Ingredient Analyzer
+            Food Analyzer
           </h4>
         </div>
       </section>
